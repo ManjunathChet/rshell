@@ -73,4 +73,9 @@ runs all commands.
 
 * Rshell returns nothing if a single `;` is entered, but UNIX returns a bash syntax error.
 
+* Rshell will not fill a file. For example, when run in UNIX `echo hello world > file_a` will create 
+file_a and fill it with `hello world` inside. Rshell does not create the file.
+
+* Rshell does not have the up-arrow down-arrow macro for command retrieval.
+
 ---
