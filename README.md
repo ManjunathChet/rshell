@@ -21,18 +21,18 @@ VS
 
 ---
 
-COMMANDS ARE 'pwd'
+COMMANDS ARE `pwd`
 
 BLOCK OF CODE
 
-'''
+```
 int main()
 {
     cout<<hello world;
     return 0;
 }
 
-'''
+```
 
 ---
 
