@@ -1,45 +1,49 @@
 ===
 
-#HEADING
+#Rshell
 
-SUB-HEADING
+*Contributors:
+
+Chetas Manjunath
+Mike Izbicki
+Taeyoung Kim*
+
+License: GNU GENERAL PUBLIC LICENSE
+
+*Refer to LICENSE file*
 ---
 
-##SUB-HEADING
+**Description**
 
-VS
+Rshell is a program based off of the UNIX bash shell. The purpose of the
+program is to mimic the command line behavior of the bash shell. When run
+in a UNIX terminal, the program takes in common shell commands. These include
+`pwd` `ls` `echo` and most other commands. 
 
-1ST PARAGRAPH
+The program does the following:
 
-2ND PARAGRAPH
-
----
-
-**BOLD**
-
-*ITALIC*
-
----
-
-COMMANDS ARE `pwd`
-
-BLOCK OF CODE
-
-```
-int main()
-{
-    cout<<hello world;
-    return 0;
-}
-
-```
+* Print a command promt with userID
+* Read in commands that are entered on one line
+* Run commands when entered
+* Exit when the user types `exit`
 
 ---
 
-NUMBERED LISTS:
+**Instructions**
 
-1. ONE
-2. TWO
-3. THREE
+The root folder for this program can be found at `https://github.com/ManjunathChet/rshell.git`.
+Once in the folder,
+
+* Run the command `make`.
+* Run `bin/rshell` to run the program.
+* After testing, enter `exit` to close the program.
+
+---
+
+**Known Bugs**
+
+* UNIX prioritizes `;` over connectors `&&` and `||`. In Rshell, all three connectors are
+treated the same. ` ls -l || pwd; ls -a` will perform `ls -l` and `pwd` when run in 
+terminal. The same command only runs `ls -l` in Rshell.
 
 ---
