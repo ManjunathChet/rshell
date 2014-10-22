@@ -1,0 +1,157 @@
+Script started on Tue 21 Oct 2014 10:58:39 PM PDT
+~
+cmanj001@hammer $ ls[K[Kcsd[K[Kd cs100
+~/cs100
+cmanj001@hammer $ cd rshell/
+~/cs100/rshell
+cmanj001@hammer $ make
+([ ! -d bin ] && mkdir bin) || [ -d bin ]
+g++ -W -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
+~/cs100/rshell
+cmanj001@hammer $ bin/rshell
+cmanj001 $ 
+cmanj001 $ ls
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+cmanj001 $ ls -a ||   ; ls -l
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+total 84
+drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 bin
+-rw------- 1 cmanj001 classes 18027 Oct 21 21:33 LICENSE
+-rw------- 1 cmanj001 classes   205 Oct 21 20:59 Makefile
+-rw------- 1 cmanj001 classes  2143 Oct 21 22:39 README.md
+-rwx------ 1 cmanj001 classes 43461 Oct 21 14:52 rshell.out
+drwx------ 2 cmanj001 classes  4096 Oct 21 22:48 src
+drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 tests
+cmanj001 $ ls && ls -a
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ ls || ls -a
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+cmanj001 $ ls &&& ls -a
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+execvp failed: No such file or directory
+cmanj001 $ ls &&&& ls -a
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ ls || ls -a
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+cmanj001 $ ls |||| ls -a
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+cmanj001 $ ls \\  
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+cmanj001 $ 
+cmanj001 $ ls ||| ls -a #odd number
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+cmanj001 $ rshell/bin
+execvp failed: No such file or directory
+cmanj001 $ bin/rshell
+cmanj001 $ bin/rshell
+cmanj001 $ bin/rshell
+cmanj001 $ bin/shell
+execvp failed: No such file or directory
+cmanj001 $ bin/rshell
+cmanj001 $ bin/rshell
+cmanj001 $ bin/rshell
+cmanj001 $ exit
+cmanj001 $ exit
+cmanj001 $ exit
+cmanj001 $ exit
+cmanj001 $ exit
+cmanj001 $ exit
+cmanj001 $ ls-  -garbage || j ls -a
+ls: invalid option -- 'e'
+Try `ls --help' for more information.
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ ls -a -a -a
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ ls -a -l
+total 96
+drwx------ 6 cmanj001 classes  4096 Oct 21 22:51 .
+drwx------ 6 cmanj001 classes  4096 Oct 20 11:33 ..
+drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 bin
+drwx------ 8 cmanj001 classes  4096 Oct 21 22:39 .git
+-rw------- 1 cmanj001 classes 18027 Oct 21 21:33 LICENSE
+-rw------- 1 cmanj001 classes   205 Oct 21 20:59 Makefile
+-rw------- 1 cmanj001 classes  2143 Oct 21 22:39 README.md
+-rwx------ 1 cmanj001 classes 43461 Oct 21 14:52 rshell.out
+drwx------ 2 cmanj001 classes  4096 Oct 21 22:48 src
+drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 tests
+cmanj001 $ ls -a-
+ls: invalid option -- '-'
+Try `ls --help' for more information.
+cmanj001 $ garbage ||          echo      echo "j    hellow ro     world
+hello world
+cmanj001 $ echo "hello world"
+"hello world"
+cmanj001 $ echo "hello            world"
+"hello world"
+cmanj001 $ r r ls -a || garbage  ; ls -a && garbage
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ ls -a && garbage; ls -a || garbage
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+execvp failed: No such file or directory
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ ls         &&            pwd
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ ls && && pwd
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ pwd garbage
+pwd: ignoring non-option arguments
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ mkdir test_dir
+cmanj001 $ ls
+bin  LICENSE  Makefile	README.md  rshell.out  src  test_dir  tests
+cmanj001 $ rm test_dir
+rm: cannot remove `test_dir': Is a directory
+cmanj001 $ rm -rf n mdir         dir t	est_dir
+cmanj001 $ ^[[A
+execvp failed: No such file or directory
+cmanj001 $ ^[[B
+execvp failed: No such file or directory
+cmanj001 $ || ls -a
+cmanj001 $ && ls -a
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ ; ls -a
+.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
+cmanj001 $ echo # hello world
+
+cmanj001 $ ec#ho hello world
+execvp failed: No such file or directory
+cmanj001 $ echo hello world > test_file
+hello world > test_file
+cmanj001 $ ls
+bin  LICENSE  Makefile	README.md  rshell.out  src  tests
+cmanj001 $ | echo hello
+execvp failed: No such file or directory
+cmanj001 $ & echo le  hello
+execvp failed: No such file or directory
+cmanj001 $ ls ;  ; ls    pwd
+bin  LICENSE  Makefile	README.md  rshell.out  src  test_file  tests
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ ls ; pwd
+bin  LICENSE  Makefile	README.md  rshell.out  src  test_file  tests
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ ls ;pwd
+bin  LICENSE  Makefile	README.md  rshell.out  src  test_file  tests
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ ls p;wd
+ls: cannot access p: No such file or directory
+execvp failed: No such file or directory
+cmanj001 $ cd
+execvp failed: No such file or directory
+cmanj001 $ eXIT
+execvp failed: No such file or directory
+cmanj001 $ exi
+execvp failed: No such file or directory
+cmanj001 $ ex
+7[?47h[?1h=[1;64r[>c[64;1HEntering Ex mode.  Type "visual" to go to Normal mode.
+:P+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\visual
+[m[H[2J[1;1H[33m  1 [m
+[1m[34m~                                                                                                                    [3;1H~                                                                                                                    [4;1H~                                                                                                                    [5;1H~                                                                                                                    [6;1H~                                                                                                                    [7;1H~                                                                                                                    [8;1H~                                                                                                                    [9;1H~                                                                                                                    [10;1H~                                                                                                                    [11;1H~                                                                                                                    [12;1H~                                                                                                                    [13;1H~                                                                                                                    [14;1H~                                                                                                                    [15;1H~                                                                                                                    [16;1H~                                                                                                                    [17;1H~                                                                                                                    [18;1H~                                                                                                                    [19;1H~                                                                                                                    [20;1H~                                                                                                                    [21;1H~                                                                                                                    [22;1H~                                                                                                                    [23;1H~                                                                                                                    [24;1H~                                                                                                                    [25;1H~                                                                                                                    [26;1H~                                                                                                                    [27;1H~                                                                                                                    [28;1H~                                                                                                                    [29;1H~                                                                                                                    [30;1H~                                                                                                                    [31;1H~                                                                                                                    [32;1H~                                                                                                                    [33;1H~                                                                                                                    [34;1H~                                                                                                                    [35;1H~                                                                                                                    [36;1H~                                                                                                                    [37;1H~                                                                                                                    [38;1H~                                                                                                                    [39;1H~                                                                                                                    [40;1H~                                                                                                                    [41;1H~                                                                                                                    [42;1H~                                                                                                                    [43;1H~                                                                                                                    [44;1H~                                                                                                                    [45;1H~                                                                                                                    [46;1H~                                                                                                                    [47;1H~                                                                                                                    [48;1H~                                                                                                                    [49;1H~                                                                                                                    [50;1H~                                                                                                                    [51;1H~                                                                                                                    [52;1H~                                                                                                                    [53;1H~                                                                                                                    [54;1H~                                                                                                                    [55;1H~                                                                                                                    [56;1H~                                                                                                                    [57;1H~                                                                                                                    [58;1H~                                                                                                                    [59;1H~                                                                                                                    [60;1H~                                                                                                                    [61;1H~                                                                                                                    [62;1H~                                                                                                                    [63;1H~                                                                                                                    [m[64;100H0,0-1[9CAll[26;51HVIM - Vi IMproved[28;52Hversion 7.2.411[29;47Hby Bram Moolenaar et al.[30;43HModified by [34m<bugzilla@redhat.com>[m[31;38HVim is open source and freely distributable[33;45HBecome a registered Vim user![34;36Htype  :help register[34m<Enter>[m   for information [36;36Htype  :q[34m<Enter>[m               to exit         [37;36Htype  :help[34m<Enter>[m  or  [34m<F1>[m  for on-line help[38;36Htype  :help version7[34m<Enter>[m   for version info[1;5H[64;90Hq[1;5H[64;91H^M[1;5H[64;90H   [1;5H[64;90Hq[1;5H[64;91H^M[1;5H[64;90H   [1;5H[64;90H:[1;5H[64;90H[K[64;1H:q[64;1H[K[64;1H[?1l>[2J[?47l8cmanj001 $ exit
+~/cs100/rshell
+cmanj001@hammer $ exit
+exit
+
+Script done on Tue 21 Oct 2014 11:11:56 PM PDT
