@@ -61,5 +61,16 @@ But when Rshell passes in `&`, the commands "cannot access &".
 * When `echo` has arguments in quotations, UNIX strips the whitespace and outputs strings only.
 Rshell outputs all whitespace and the quotations as well.
 
+* UNIX treats everything in quotations as a single argument. Rshell splits up arguments based 
+on whitespace.
+
+* Rshell cannot run `cd`
+
+* Rshell will not recognize `&&` and `||` as invalid commands if they are the first inputs.
+`|| ls -a || ls -l` yields a bash syntax error in UNIX. In Rshell, this command is valid and
+outputs nothing. Similarly, `&& ls -a && ls -l` yields a bash syntax error in UNIX. Rshell successfully
+runs all commands.
+
+* Rshell returns nothing if a single `;` is entered, but UNIX returns a bash syntax error.
 
 ---
