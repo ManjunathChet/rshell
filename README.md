@@ -2,15 +2,17 @@
 
 #Rshell
 
-*Contributors:
+Root Location: https://github.com/ManjunathChet/rshell.git
 
-Chetas Manjunath
-Mike Izbicki
-Taeyoung Kim*
+*Contributors:*
+
+*Chetas Manjunath*
+*Mike Izbicki*
+*Taeyoung Kim*
 
 License: GNU GENERAL PUBLIC LICENSE
-
 *Refer to LICENSE file*
+
 ---
 
 **Description**
