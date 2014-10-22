@@ -6,12 +6,12 @@ Root Location: https://github.com/ManjunathChet/rshell.git
 
 *Contributors:*
 
-*Chetas Manjunath*
-*Mike Izbicki*
-*Taeyoung Kim*
+*Chetas Manjunath,*
+*Mike Izbicki,*
+*and Taeyoung Kim*
 
 License: GNU GENERAL PUBLIC LICENSE
-*Refer to LICENSE file*
+*--Refer to LICENSE file--*
 
 ---
 
@@ -47,5 +47,19 @@ Once in the folder,
 * UNIX prioritizes `;` over connectors `&&` and `||`. In Rshell, all three connectors are
 treated the same. ` ls -l || pwd; ls -a` will perform `ls -l` and `pwd` when run in 
 terminal. The same command only runs `ls -l` in Rshell.
+
+* When `&` is passed in as an argument into UNIX, it runs the commands, but flips the output.
+For example, `pwd & echo hello` returns
+```
+[1] 43775 #pid
+hello
+#files listed
+[1]+ Done
+```
+But when Rshell passes in `&`, the commands "cannot access &".
+
+* When `echo` has arguments in quotations, UNIX strips the whitespace and outputs strings only.
+Rshell outputs all whitespace and the quotations as well.
+
 
 ---
