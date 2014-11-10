@@ -9,6 +9,7 @@
 #include "Timer.h"
 #include <iostream>     // std::cin, std::cout
 #include <fstream>      // std::ifstream
+#include <cstring>
 
 
 using namespace std;
@@ -20,11 +21,16 @@ int MethodOne(char* fileOne, char* fileTwo)
 
     if (!input.is_open())
     {
-        cerr << "Could not open file" << endl;
+        cerr << "Error opening file: \"" << fileOne << endl;
         return -1;
     }
 
     ofstream output(fileTwo);
+    if (!output.is_open())
+    {
+        cerr << "Error opening file: \"" << fileTwo << "\"";
+        return -1;
+    }
 
         while (input.good())          // loop while extraction from file is possible
         {
@@ -36,7 +42,18 @@ int MethodOne(char* fileOne, char* fileTwo)
         }
 
     input.close();
+    if (input.is_open())
+    {
+        cerr << "Error closing file : \"" << fileOne << "\"" << endl;
+        return -1;
+    }
+
     output.close();
+    if (output.is_open())
+    {
+        cerr << "Error closing file : \"" << fileTwo << "\"" << endl;
+        return -1;
+    }
 
     return 0;
 }
@@ -79,13 +96,13 @@ int MethodTwo(char* fileOne, char* fileTwo)
     num = close(fdi);
     if (num == -1)
     {
-        perror("closei");
+        perror("close input");
         return -1;
     }
     fdo = close(fdo);
     if (fdo ==-1)
     {
-        perror("closeo");
+        perror("close output");
         return -1;
     }
 
@@ -148,11 +165,47 @@ int MethodThree(char* fileOne, char* fileTwo)
 
 int main(int argc, char* argv[])
 {
-    if (argc < 3 || argc > 4)
+    if (argc < 3)
     {
+        cerr << "Error: Not enough arguments" << endl;
         return -1;
     }
-    
+
+    if (argc > 4)
+    {
+        cerr << "Error: Too many arguments" << endl;
+        return -1;
+    }
+
+    if (argc == 4)
+    {
+        int i = 1;
+
+        for (; i < argc; ++i)
+        {
+            if (strncmp(argv[i], "-a", 3) == 0)
+            {
+                break;
+            }
+        }
+
+        if (i == 4)
+        {
+            cerr << "Error: Too many of arguments" << endl;
+            return -1;
+        }
+
+        if (i < 3)
+        {
+            while (i < 4)
+            {
+                argv[i] = argv[i + 1];
+                i++;
+            }
+        }
+    }
+
+
     struct stat sb;
 
     if( stat (argv[1], &sb) != 0)
@@ -178,14 +231,14 @@ int main(int argc, char* argv[])
 
     if (argc == 3)
     {
-         if(MethodThree(argv[1], argv[2]) != 0)
+        if(MethodThree(argv[1], argv[2]) != 0)
         {
             cerr << "cp failed: MethodThree" << endl;
             return -1;
         }
 
         return 0;
-    
+
     }
 
     Timer t1;
@@ -197,22 +250,22 @@ int main(int argc, char* argv[])
     double SysTime;
 
     t1.start();
-  
+
     cout<<"METHOD 1: GET.IN/ OUT.PUT: "<<endl;
-    
+
     if (MethodOne(argv[1], argv[2]) != 0)
     {
-       cout<<"cp failed: MethodOne." << endl;
+        cout<<"cp failed: MethodOne." << endl;
     }
 
     t1.elapsedTime(wallTime, userTime, SysTime);
-        cout<<"Elapsed Time: "<<endl
+    cout<<"Elapsed Time: "<<endl
         <<"Wall: "<< wallTime<< endl
         <<"System: "  <<SysTime<<endl
         <<"User: "<<userTime<<endl;
 
-        cout<<"=================="<<endl<<endl;
-    
+    cout<<"=================="<<endl<<endl;
+
     t2.start();
 
     cout<<"METHOD 2: READ/WRITE 1 CHAR: "<<endl;
@@ -223,29 +276,31 @@ int main(int argc, char* argv[])
         cerr << "cp failed: MethodTwo" << endl;
     }
 
- 
+
     t2.elapsedTime(wallTime, userTime, SysTime);
     cout<<"Elapsed Time: "<<endl
         <<"Wall: "<< wallTime<< endl
         <<"System: "  <<SysTime<<endl
         <<"User: "<<userTime<<endl;
 
-        cout<<"=================="<<endl<<endl;
-    
+    cout<<"=================="<<endl<<endl;
+
     t3.start();
 
-     cout<<"METHOD 3: READ/WRITE BUFSIZ: "<<endl;
+    cout<<"METHOD 3: READ/WRITE BUFSIZ: "<<endl;
 
     if(MethodThree(argv[1], argv[2]) != 0)
     {
         cerr << "cp failed: MethodThree" << endl;
     }
-    
+
     t3.elapsedTime(wallTime, userTime, SysTime);
     cout<<"Elapsed Time: "<<endl
         <<"Wall: "<< wallTime<< endl
         <<"System: "  <<SysTime<<endl
         <<"User: "<<userTime<<endl;
 
-        cout<<"=================="<<endl<<endl;
+    cout<<"=================="<<endl<<endl;
+
+    return 0;
 }
