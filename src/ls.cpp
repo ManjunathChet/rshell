@@ -54,6 +54,8 @@ int main()
 
     for (unsigned int i = 0; i < filenames.size(); i++)
     {
+        cout<<"OUTPUT START: "<<endl;
+
         if (filenames[i] != "")
         {
             cout<<filenames[i]<<endl;
@@ -68,11 +70,6 @@ int main()
         //cout << direntp->d_name << endl;
         // use stat here to find attributes of file
 
-    //}
-
-    //for (int i = 0; i < m.size(); i++)
-    //{
-    //    cout<<m[i]<<endl;
     //}
 
     closedir(dirp);
