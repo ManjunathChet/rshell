@@ -49,6 +49,7 @@ int main()
         filenames.insert(std::pair <char , string>(key,current));
     }
 
+    //
     //sort(filenames.begin(), filenames.end());
 
     for (unsigned int i = 0; i < filenames.size(); i++)
