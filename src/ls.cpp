@@ -52,17 +52,20 @@ int long_list(const char * dirName)
         perror("stat");
     }
 
+
+
     string firstpart;
+    int colorflag = -1;
 
     switch (sb.st_mode & S_IFMT) {
-    case S_IFBLK:  firstpart.append("b");       break;
-    case S_IFCHR:  firstpart.append("c");       break;
-    case S_IFDIR:  firstpart.append("d");       break;
-    case S_IFIFO:  firstpart.append("p");       break;
-    case S_IFLNK:  firstpart.append("l");       break;
-    case S_IFREG:  firstpart.append("-");       break;
-    case S_IFSOCK: firstpart.append("s");       break;
-    default:       firstpart.append("?");       break;
+    case S_IFBLK:  firstpart.append("b");                   break;
+    case S_IFCHR:  firstpart.append("c");                   break;
+    case S_IFDIR:  firstpart.append("d"); colorflag=4;      break;
+    case S_IFIFO:  firstpart.append("p");                   break;
+    case S_IFLNK:  firstpart.append("l");                   break;
+    case S_IFREG:  firstpart.append("-");                   break;
+    case S_IFSOCK: firstpart.append("s");                   break;
+    default:       firstpart.append("?");                   break;
     }
    
     if((sb.st_mode & S_IRUSR))
@@ -100,7 +103,16 @@ int long_list(const char * dirName)
         cout<<setw(8)<<right<<user -> pw_name<<" "
             <<grp -> gr_name<<" ";
         cout<<setw(10)<<right<<newtime<<" ";
-        cout<<dirName<<endl;
+        if (colorflag == 4)
+        {
+            cout<< "\033[1;34m"<<dirName
+            <<"\033[0m"<<endl;
+        }
+        else
+        {
+            cout<<dirName<<endl;
+        }
+        
         return 0;
 }
 
