@@ -6,9 +6,8 @@ Root Location: https://github.com/ManjunathChet/rshell.git
 
 *Contributors:*
 
-*Chetas Manjunath,*
-*Mike Izbicki,*
-*and Taeyoung Kim*
+*Chetas Manjunath*
+*Gillian Liu (for cp)*
 
 License: GNU GENERAL PUBLIC LICENSE
 *--Refer to LICENSE file--*
@@ -29,6 +28,21 @@ The program does the following:
 * Run commands when entered
 * Exit when the user types `exit`
 
+The ls program is meant to mimic the Linux ls command.
+
+The ls program does the following:
+
+* Outputs files in specified directory.
+* Takes in `-a` `-l` `-R` flags
+* Uses stat syscall to retrieve file information.
+
+The cp program is meant to mimic the Linux cp command.
+
+The cp program does the following:
+
+* Copies contents from the first file specified to the second.
+* Outputs errors based on files passed in and total arguments.
+
 ---
 
 **Instructions**
@@ -37,12 +51,12 @@ The root folder for this program can be found at `https://github.com/ManjunathCh
 Once in the folder,
 
 * Run the command `make`.
-* Run `bin/rshell` to run the program.
-* After testing, enter `exit` to close the program.
-
+* Run `bin/rshell` to run Rshell, or `bin/ls` for ls.
 ---
 
 **Known Bugs**
+
+RSHELL: 
 
 * UNIX prioritizes `;` over connectors `&&` and `||`. In Rshell, all three connectors are
 treated the same. ` ls -l || pwd; ls -a` will perform `ls -l` and `pwd` when run in 
@@ -77,5 +91,17 @@ runs all commands.
 file_a and fill it with `hello world` inside. Rshell does not create the file.
 
 * Rshell does not have the up-arrow down-arrow macro for command retrieval.
+
+LS:
+
+* `ls -l` does not support the OSX filetype recognition.
+
+* When ls -l is run on multiple directories, there are spaces missing between the sets.
+
+* Column sizes of output are all uniform. The width is based on the largest filename.
+
+* When `-a` and `-l` are run together, the total # is missing at the top.
+
+* The filenames are displayed with their parent folders in `ls -l`.
 
 ---
