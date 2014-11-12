@@ -50,9 +50,70 @@ struct compare
     }
 };
 
+int long_list(const char * dirName)
+{
+    struct stat sb;
+
+    if(stat(dirName, &sb)==-1)
+    {
+        perror("stat");
+    }
+
+    switch (sb.st_mode & S_IFMT) {
+    case S_IFBLK:  cout<<"b";       break;
+    case S_IFCHR:  cout<<"c";       break;
+    case S_IFDIR:  cout<<"d";       break;
+    case S_IFIFO:  cout<<"p";       break;
+    case S_IFLNK:  cout<<"l";       break;
+    case S_IFREG:  cout<<"-";       break;
+    case S_IFSOCK: cout<<"s";       break;
+    default:       cout<<"?";       break;
+    }
+   
+    if((sb.st_mode & S_IRUSR))
+    {
+        cout<<"r";
+    }
+
+    if((sb.st_mode & S_IWUSR))
+    {
+        cout<<"w";
+    }
+
+    if((sb.st_mode & S_IXUSR))
+    {
+        cout<<"x";
+    }               
+    
+    struct passwd *user = getpwuid(getuid());
+    if (user == NULL)
+    {
+        perror("get user error");
+    }
+    
+    struct group *grp = getgrgid(getgid());
+    if (grp == NULL)
+    {
+        perror("getgid error");
+    }
+
+    string time = ctime(&sb.st_mtime);
+    string newtime = time.substr(0,24);
+
+        cout<<right<<setw(6)<<setfill('-');
+        cout<<sb.st_nlink;
+        cout<<setw(8)<<right<<setfill(' ')
+            <<sb.st_size<<" ";
+        cout<<setw(8)<<right<<user -> pw_name<<" "
+            <<grp -> gr_name<<" ";
+        cout<<setw(10)<<right<<newtime<<" ";
+        cout<<dirName<<endl;
+        return 0;
+}
+
 int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
 {
-    if (dirName[0] == '-')
+    if (dirName[0] == '-' || dirName[0] == '\0')
     {
         return 0;
     }
@@ -61,7 +122,7 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
     struct stat tester;
     if (stat(dirName, &tester) == -1)
     {
-        perror("stat");
+        perror("tester stat");
     }
 
     if (S_ISREG(tester.st_mode) == true && l_flag == false)
@@ -72,62 +133,8 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
     }
     else if (S_ISREG(tester.st_mode) == true && l_flag == true)
     {
-        struct stat sb;
-        if(stat(dirName, &sb)==-1)
-        {
-            perror("stat");
-        }
-
-        switch (sb.st_mode & S_IFMT) {
-        case S_IFBLK:  cout<<"b";       break;
-        case S_IFCHR:  cout<<"c";       break;
-        case S_IFDIR:  cout<<"d";       break;
-        case S_IFIFO:  cout<<"p";       break;
-        case S_IFLNK:  cout<<"l";       break;
-        case S_IFREG:  cout<<"-";       break;
-        case S_IFSOCK: cout<<"s";       break;
-        default:       cout<<"?";       break;
-        }
-       
-        if((sb.st_mode & S_IRUSR))
-        {
-            cout<<"r";
-        }
-
-        if((sb.st_mode & S_IWUSR))
-        {
-            cout<<"w";
-        }
-
-        if((sb.st_mode & S_IXUSR))
-        {
-            cout<<"x";
-        }               
-        
-        struct passwd *user = getpwuid(getuid());
-        if (user == NULL)
-        {
-            perror("get user error");
-        }
-        
-        struct group *grp = getgrgid(getgid());
-        if (grp == NULL)
-        {
-            perror("getgid error");
-        }
-
-        string time = ctime(&sb.st_mtime);
-        string newtime = time.substr(0,24);
-
-            cout<<right<<setw(6)<<setfill('-');
-            cout<<sb.st_nlink;
-            cout<<setw(8)<<right<<setfill(' ')
-                <<sb.st_size<<" ";
-            cout<<setw(8)<<right<<user -> pw_name<<" "
-                <<grp -> gr_name<<" ";
-            cout<<setw(10)<<right<<newtime<<" ";
-            cout<<dirName<<endl;
-            return 0;
+        long_list(dirName);
+        return 0;
     }
 
 
@@ -155,7 +162,7 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
         }
 
         int counter = 0;
-        char* current = direntp -> d_name;
+        const char* current = direntp -> d_name;
         
         while (current[counter] != '\0')
         {
@@ -214,66 +221,13 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
             
             if (filenames[i] != "")
             {
-                struct stat sb;
-                if(stat(filenames[i].c_str(), &sb)==-1)
-                {
-                    perror("stat");
-                }
-
-                string name = filenames[i].c_str();
-    
-                switch (sb.st_mode & S_IFMT) {
-                case S_IFBLK:  cout<<"b";       break;
-                case S_IFCHR:  cout<<"c";       break;
-                case S_IFDIR:  cout<<"d";       break;
-                case S_IFIFO:  cout<<"p";       break;
-                case S_IFLNK:  cout<<"l";       break;
-                case S_IFREG:  cout<<"-";       break;
-                case S_IFSOCK: cout<<"s";       break;
-                default:       cout<<"?";       break;
-                }
-               
-                if((sb.st_mode & S_IRUSR))
-                {
-                    cout<<"r";
-                }
-
-                if((sb.st_mode & S_IWUSR))
-                {
-                    cout<<"w";
-                }
- 
-                if((sb.st_mode & S_IXUSR))
-                {
-                    cout<<"x";
-                }               
-                
-                struct passwd *user = getpwuid(getuid());
-                if (user == NULL)
-                {
-                    perror("get user error");
-                }
-                
-                struct group *grp = getgrgid(getgid());
-                if (grp == NULL)
-                {
-                    perror("getgid error");
-                }
-
-                string time = ctime(&sb.st_mtime);
-                string newtime = time.substr(0,24);
-
-                    cout<<right<<setw(6)<<setfill('-');
-                    cout<<sb.st_nlink;
-                    cout<<setw(8)<<right<<setfill(' ')
-                        <<sb.st_size<<" ";
-                    cout<<setw(8)<<right<<user -> pw_name<<" "
-                        <<grp -> gr_name<<" ";
-                    cout<<setw(10)<<right<<newtime<<" ";
-                    cout<<filenames[i]<<endl;
-                }
+                string buff2 = dirName;
+                buff2.append("/");
+                buff2.append(filenames[i]);
+                long_list(buff2.c_str());
             }
         }
+    }
 
     if(R_flag == true)
     {
@@ -283,9 +237,12 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
             if (filenames[i] != "")
             {
                 struct stat sb;
-                if(stat(filenames[i].c_str(), &sb) == -1)
+                string buff = dirName;
+                buff.append("/");
+                buff.append(filenames[i]);
+                if(stat(buff.c_str(), &sb) == -1)
                 {
-                    perror("stat");
+                    perror("rflag stat");
                 }
 
                 if ((sb.st_mode & S_IFMT) == S_IFDIR) 
@@ -302,7 +259,10 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
     }
 
     cout<<endl;
-    closedir(dirp);
+    if(closedir(dirp) == -1)
+    {
+        perror("close");
+    }
     return 0;
 }
 
