@@ -30,26 +30,19 @@ struct icompare_char
         return tolower(c1) < tolower(c2);
     }
 };
+
 // return true if s1 comes before s2
 struct compare 
 {
     bool operator()(string const& s1, string const& s2) 
     {
-        //if (s1.length() > s2.length())
-        //{
-        //   return false;
-        //}
-        //if (s1.length() < s2.length())
-        //{
-        //    return true;
-        //}
-
         return lexicographical_compare(s1.begin(), s1.end(),
                 s2.begin(), s2.end(),
                 icompare_char());
     }
 };
 
+//function for the long list output format (-l)
 int long_list(const char * dirName)
 {
     struct stat sb;
@@ -59,30 +52,32 @@ int long_list(const char * dirName)
         perror("stat");
     }
 
+    string firstpart;
+
     switch (sb.st_mode & S_IFMT) {
-    case S_IFBLK:  cout<<"b";       break;
-    case S_IFCHR:  cout<<"c";       break;
-    case S_IFDIR:  cout<<"d";       break;
-    case S_IFIFO:  cout<<"p";       break;
-    case S_IFLNK:  cout<<"l";       break;
-    case S_IFREG:  cout<<"-";       break;
-    case S_IFSOCK: cout<<"s";       break;
-    default:       cout<<"?";       break;
+    case S_IFBLK:  firstpart.append("b");       break;
+    case S_IFCHR:  firstpart.append("c");       break;
+    case S_IFDIR:  firstpart.append("d");       break;
+    case S_IFIFO:  firstpart.append("p");       break;
+    case S_IFLNK:  firstpart.append("l");       break;
+    case S_IFREG:  firstpart.append("-");       break;
+    case S_IFSOCK: firstpart.append("s");       break;
+    default:       firstpart.append("?");       break;
     }
    
     if((sb.st_mode & S_IRUSR))
     {
-        cout<<"r";
+        firstpart.append("r");
     }
 
     if((sb.st_mode & S_IWUSR))
     {
-        cout<<"w";
+        firstpart.append("w");
     }
 
     if((sb.st_mode & S_IXUSR))
     {
-        cout<<"x";
+        firstpart.append("x");
     }               
     
     struct passwd *user = getpwuid(getuid());
@@ -100,10 +95,8 @@ int long_list(const char * dirName)
     string time = ctime(&sb.st_mtime);
     string newtime = time.substr(0,24);
 
-        cout<<right<<setw(6)<<setfill('-');
-        cout<<sb.st_nlink;
-        cout<<setw(8)<<right<<setfill(' ')
-            <<sb.st_size<<" ";
+        cout<<left<<setw(10)<<setfill('-');
+        cout<<firstpart<<sb.st_nlink<<" ";
         cout<<setw(8)<<right<<user -> pw_name<<" "
             <<grp -> gr_name<<" ";
         cout<<setw(10)<<right<<newtime<<" ";
@@ -117,9 +110,8 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
     {
         return 0;
     }
-    //char const *dirName = ".";
 
-    struct stat tester;
+    struct stat tester;             //only for testing dirName
     if (stat(dirName, &tester) == -1)
     {
         perror("tester stat");
@@ -134,13 +126,13 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
     else if (S_ISREG(tester.st_mode) == true && l_flag == true)
     {
         long_list(dirName);
+        cout<<endl;
         return 0;
     }
 
 
 
-    DIR *dirp = opendir(dirName);       
-    //dirp is a pointer to directory stream
+    DIR *dirp = opendir(dirName);   //pointer to directory stream       
     if(dirp == NULL)                    
     {
         perror("opendir");
@@ -148,7 +140,7 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
     }
 
     dirent *direntp;
-    int longest= 0;
+    int longest= 0;     //longest file name
     vector <string> filenames;
     
     
@@ -175,13 +167,13 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
         }
 
 
-        filenames.push_back(current);
-
+        filenames.push_back(current);   //pushing all filenames
+                                        //into this vector
         if (a_flag == false)
         {
             if(current[0] == '.')
             {
-                filenames.pop_back();
+                filenames.pop_back();   //hidden files only for -a
             }
         }
     }
@@ -213,6 +205,8 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
             }
         }
 
+        cout<<endl;
+
     }
     else if(l_flag == true)
     {
@@ -221,7 +215,7 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
             
             if (filenames[i] != "")
             {
-                string buff2 = dirName;
+                string buff2 = dirName;    //buffs for directory specification
                 buff2.append("/");
                 buff2.append(filenames[i]);
                 long_list(buff2.c_str());
@@ -233,8 +227,10 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
     {
          for (unsigned int i = 0; i < filenames.size(); i++)
         {
-            
-            if (filenames[i] != "")
+
+            if (    filenames[i] != "" &&
+                    filenames[i] != "." &&  //prevent infinite loops
+                    filenames[i] != "..")   //when -a is passed
             {
                 struct stat sb;
                 string buff = dirName;
@@ -247,10 +243,12 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
 
                 if ((sb.st_mode & S_IFMT) == S_IFDIR) 
                 {
-                    ls(filenames[i].c_str(), 
+                    cout<<endl;     //recursive ls() call
+                    ls(buff.c_str(), 
                                 a_flag, 
                                 l_flag, 
                                 R_flag);
+                    cout<<endl;
                 }
             }
         }
@@ -258,11 +256,11 @@ int ls( const char * dirName, bool a_flag, bool l_flag, bool R_flag)
 
     }
 
-    cout<<endl;
     if(closedir(dirp) == -1)
     {
         perror("close");
     }
+    
     return 0;
 }
 
@@ -275,7 +273,7 @@ int main(int argc, char *argv[])
 
     vector <char *> dirlist;
 
-    bool a_flag = false;
+    bool a_flag = false;        //checks what flags are passed
     bool R_flag = false;
     bool l_flag = false;
 
@@ -317,7 +315,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            dirlist.push_back(argv[i]);
+            dirlist.push_back(argv[i]);     //keeps track of all directories passed
         }
     }
     
