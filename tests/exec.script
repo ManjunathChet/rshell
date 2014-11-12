@@ -1,157 +1,238 @@
-Script started on Tue 21 Oct 2014 10:58:39 PM PDT
+Script started on Tue 11 Nov 2014 10:41:36 PM PST
 ~
-cmanj001@hammer $ ls[K[Kcsd[K[Kd cs100
-~/cs100
-cmanj001@hammer $ cd rshell/
+cmanj001@hammer $ cd cs100/rshell
 ~/cs100/rshell
-cmanj001@hammer $ make
-([ ! -d bin ] && mkdir bin) || [ -d bin ]
-g++ -W -Wall -Werror -ansi -pedantic src/main.cpp -o bin/rshell
-~/cs100/rshell
-cmanj001@hammer $ bin/rshell
-cmanj001 $ 
-cmanj001 $ ls
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-cmanj001 $ ls -a ||   ; ls -l
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-total 84
-drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 bin
--rw------- 1 cmanj001 classes 18027 Oct 21 21:33 LICENSE
--rw------- 1 cmanj001 classes   205 Oct 21 20:59 Makefile
--rw------- 1 cmanj001 classes  2143 Oct 21 22:39 README.md
--rwx------ 1 cmanj001 classes 43461 Oct 21 14:52 rshell.out
-drwx------ 2 cmanj001 classes  4096 Oct 21 22:48 src
-drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 tests
-cmanj001 $ ls && ls -a
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ ls || ls -a
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-cmanj001 $ ls &&& ls -a
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-execvp failed: No such file or directory
-cmanj001 $ ls &&&& ls -a
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ ls || ls -a
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-cmanj001 $ ls |||| ls -a
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-cmanj001 $ ls \\  
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-cmanj001 $ 
-cmanj001 $ ls ||| ls -a #odd number
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-cmanj001 $ rshell/bin
-execvp failed: No such file or directory
-cmanj001 $ bin/rshell
-cmanj001 $ bin/rshell
-cmanj001 $ bin/rshell
-cmanj001 $ bin/shell
-execvp failed: No such file or directory
-cmanj001 $ bin/rshell
-cmanj001 $ bin/rshell
-cmanj001 $ bin/rshell
-cmanj001 $ exit
-cmanj001 $ exit
-cmanj001 $ exit
-cmanj001 $ exit
-cmanj001 $ exit
-cmanj001 $ exit
-cmanj001 $ ls-  -garbage || j ls -a
-ls: invalid option -- 'e'
-Try `ls --help' for more information.
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ ls -a -a -a
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ ls -a -l
-total 96
-drwx------ 6 cmanj001 classes  4096 Oct 21 22:51 .
-drwx------ 6 cmanj001 classes  4096 Oct 20 11:33 ..
-drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 bin
-drwx------ 8 cmanj001 classes  4096 Oct 21 22:39 .git
--rw------- 1 cmanj001 classes 18027 Oct 21 21:33 LICENSE
--rw------- 1 cmanj001 classes   205 Oct 21 20:59 Makefile
--rw------- 1 cmanj001 classes  2143 Oct 21 22:39 README.md
--rwx------ 1 cmanj001 classes 43461 Oct 21 14:52 rshell.out
-drwx------ 2 cmanj001 classes  4096 Oct 21 22:48 src
-drwx------ 2 cmanj001 classes  4096 Oct 21 22:58 tests
-cmanj001 $ ls -a-
-ls: invalid option -- '-'
-Try `ls --help' for more information.
-cmanj001 $ garbage ||          echo      echo "j    hellow ro     world
-hello world
-cmanj001 $ echo "hello world"
-"hello world"
-cmanj001 $ echo "hello            world"
-"hello world"
-cmanj001 $ r r ls -a || garbage  ; ls -a && garbage
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ ls -a && garbage; ls -a || garbage
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-execvp failed: No such file or directory
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ ls         &&            pwd
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-/class/classes/cmanj001/cs100/rshell
-cmanj001 $ ls && && pwd
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-/class/classes/cmanj001/cs100/rshell
-cmanj001 $ pwd garbage
-pwd: ignoring non-option arguments
-/class/classes/cmanj001/cs100/rshell
-cmanj001 $ mkdir test_dir
-cmanj001 $ ls
-bin  LICENSE  Makefile	README.md  rshell.out  src  test_dir  tests
-cmanj001 $ rm test_dir
-rm: cannot remove `test_dir': Is a directory
-cmanj001 $ rm -rf n mdir         dir t	est_dir
-cmanj001 $ ^[[A
-execvp failed: No such file or directory
-cmanj001 $ ^[[B
-execvp failed: No such file or directory
-cmanj001 $ || ls -a
-cmanj001 $ && ls -a
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ ; ls -a
-.  ..  bin  .git  LICENSE  Makefile  README.md	rshell.out  src  tests
-cmanj001 $ echo # hello world
+cmanj001@hammer $ bin/ls
+bin        LICENSE    Makefile   README.md  rshell.out src        tests      
 
-cmanj001 $ ec#ho hello world
-execvp failed: No such file or directory
-cmanj001 $ echo hello world > test_file
-hello world > test_file
-cmanj001 $ ls
-bin  LICENSE  Makefile	README.md  rshell.out  src  tests
-cmanj001 $ | echo hello
-execvp failed: No such file or directory
-cmanj001 $ & echo le  hello
-execvp failed: No such file or directory
-cmanj001 $ ls ;  ; ls    pwd
-bin  LICENSE  Makefile	README.md  rshell.out  src  test_file  tests
-/class/classes/cmanj001/cs100/rshell
-cmanj001 $ ls ; pwd
-bin  LICENSE  Makefile	README.md  rshell.out  src  test_file  tests
-/class/classes/cmanj001/cs100/rshell
-cmanj001 $ ls ;pwd
-bin  LICENSE  Makefile	README.md  rshell.out  src  test_file  tests
-/class/classes/cmanj001/cs100/rshell
-cmanj001 $ ls p;wd
-ls: cannot access p: No such file or directory
-execvp failed: No such file or directory
-cmanj001 $ cd
-execvp failed: No such file or directory
-cmanj001 $ eXIT
-execvp failed: No such file or directory
-cmanj001 $ exi
-execvp failed: No such file or directory
-cmanj001 $ ex
-7[?47h[?1h=[1;64r[>c[64;1HEntering Ex mode.  Type "visual" to go to Normal mode.
-:P+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\visual
-[m[H[2J[1;1H[33m  1 [m
-[1m[34m~                                                                                                                    [3;1H~                                                                                                                    [4;1H~                                                                                                                    [5;1H~                                                                                                                    [6;1H~                                                                                                                    [7;1H~                                                                                                                    [8;1H~                                                                                                                    [9;1H~                                                                                                                    [10;1H~                                                                                                                    [11;1H~                                                                                                                    [12;1H~                                                                                                                    [13;1H~                                                                                                                    [14;1H~                                                                                                                    [15;1H~                                                                                                                    [16;1H~                                                                                                                    [17;1H~                                                                                                                    [18;1H~                                                                                                                    [19;1H~                                                                                                                    [20;1H~                                                                                                                    [21;1H~                                                                                                                    [22;1H~                                                                                                                    [23;1H~                                                                                                                    [24;1H~                                                                                                                    [25;1H~                                                                                                                    [26;1H~                                                                                                                    [27;1H~                                                                                                                    [28;1H~                                                                                                                    [29;1H~                                                                                                                    [30;1H~                                                                                                                    [31;1H~                                                                                                                    [32;1H~                                                                                                                    [33;1H~                                                                                                                    [34;1H~                                                                                                                    [35;1H~                                                                                                                    [36;1H~                                                                                                                    [37;1H~                                                                                                                    [38;1H~                                                                                                                    [39;1H~                                                                                                                    [40;1H~                                                                                                                    [41;1H~                                                                                                                    [42;1H~                                                                                                                    [43;1H~                                                                                                                    [44;1H~                                                                                                                    [45;1H~                                                                                                                    [46;1H~                                                                                                                    [47;1H~                                                                                                                    [48;1H~                                                                                                                    [49;1H~                                                                                                                    [50;1H~                                                                                                                    [51;1H~                                                                                                                    [52;1H~                                                                                                                    [53;1H~                                                                                                                    [54;1H~                                                                                                                    [55;1H~                                                                                                                    [56;1H~                                                                                                                    [57;1H~                                                                                                                    [58;1H~                                                                                                                    [59;1H~                                                                                                                    [60;1H~                                                                                                                    [61;1H~                                                                                                                    [62;1H~                                                                                                                    [63;1H~                                                                                                                    [m[64;100H0,0-1[9CAll[26;51HVIM - Vi IMproved[28;52Hversion 7.2.411[29;47Hby Bram Moolenaar et al.[30;43HModified by [34m<bugzilla@redhat.com>[m[31;38HVim is open source and freely distributable[33;45HBecome a registered Vim user![34;36Htype  :help register[34m<Enter>[m   for information [36;36Htype  :q[34m<Enter>[m               to exit         [37;36Htype  :help[34m<Enter>[m  or  [34m<F1>[m  for on-line help[38;36Htype  :help version7[34m<Enter>[m   for version info[1;5H[64;90Hq[1;5H[64;91H^M[1;5H[64;90H   [1;5H[64;90Hq[1;5H[64;91H^M[1;5H[64;90H   [1;5H[64;90H:[1;5H[64;90H[K[64;1H:q[64;1H[K[64;1H[?1l>[2J[?47l8cmanj001 $ exit
 ~/cs100/rshell
-cmanj001@hammer $ exit
+cmanj001@hammer $ bin/ls -a
+.          ..         .git       bin        LICENSE    Makefile   README.md  
+rshell.out src        tests      
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -a[Kl
+drwx------2 cmanj001 classes Tue Nov 11 22:35:42 2014 ./bin
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 ./LICENSE
+-rw-------1 cmanj001 classes Mon Nov 10 17:12:43 2014 ./Makefile
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 ./README.md
+-rwx------1 cmanj001 classes Mon Nov 10 02:04:00 2014 ./rshell.out
+drwx------2 cmanj001 classes Tue Nov 11 22:34:59 2014 ./src
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 ./tests
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -la
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 ./.
+drwx------10 cmanj001 classes Mon Nov 10 11:35:08 2014 ./..
+drwx------8 cmanj001 classes Tue Nov 11 21:25:49 2014 ./.git
+drwx------2 cmanj001 classes Tue Nov 11 22:35:42 2014 ./bin
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 ./LICENSE
+-rw-------1 cmanj001 classes Mon Nov 10 17:12:43 2014 ./Makefile
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 ./README.md
+-rwx------1 cmanj001 classes Mon Nov 10 02:04:00 2014 ./rshell.out
+drwx------2 cmanj001 classes Tue Nov 11 22:34:59 2014 ./src
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 ./tests
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -la[K -a
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 ./.
+drwx------10 cmanj001 classes Mon Nov 10 11:35:08 2014 ./..
+drwx------8 cmanj001 classes Tue Nov 11 21:25:49 2014 ./.git
+drwx------2 cmanj001 classes Tue Nov 11 22:35:42 2014 ./bin
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 ./LICENSE
+-rw-------1 cmanj001 classes Mon Nov 10 17:12:43 2014 ./Makefile
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 ./README.md
+-rwx------1 cmanj001 classes Mon Nov 10 02:04:00 2014 ./rshell.out
+drwx------2 cmanj001 classes Tue Nov 11 22:34:59 2014 ./src
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 ./tests
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -l -a[Kl -a -l -a
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 ./.
+drwx------10 cmanj001 classes Mon Nov 10 11:35:08 2014 ./..
+drwx------8 cmanj001 classes Tue Nov 11 21:25:49 2014 ./.git
+drwx------2 cmanj001 classes Tue Nov 11 22:35:42 2014 ./bin
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 ./LICENSE
+-rw-------1 cmanj001 classes Mon Nov 10 17:12:43 2014 ./Makefile
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 ./README.md
+-rwx------1 cmanj001 classes Mon Nov 10 02:04:00 2014 ./rshell.out
+drwx------2 cmanj001 classes Tue Nov 11 22:34:59 2014 ./src
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 ./tests
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -l -l -a -l -a[K[K[K[K[K[K[K[K[K[K[K[K[KR tests #recursion will be run in tests for[Kle[Kder for s cript neatness.
+tests: 
+00000000222     02343           123             :945            
+anotherfolder   exec.script     fileA           fileB           
+garbage         random          randomness      ThisIsALongFile 
+ThisIsAnother   typescript      {45894          
+
+tests/anotherfolder: 
+something     somethingelse 
+
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -R tests #recursion will be run in tests folder for sccript neatness.[A[C[C[C[C[C[C[C[C[C[C[Cl -l -a -l -a[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[Ktests -Ral
+tests: 
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/.
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 tests/..
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:07 2014 tests/00000000222
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:11 2014 tests/02343
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:14 2014 tests/123
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:18 2014 tests/:945
+drwx------2 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder
+-rw-------1 cmanj001 classes Tue Oct 21 23:11:39 2014 tests/exec.script
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:51 2014 tests/fileA
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:56 2014 tests/fileB
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:03 2014 tests/garbage
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:00 2014 tests/random
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:28 2014 tests/randomness
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:42 2014 tests/ThisIsALongFile
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:47 2014 tests/ThisIsAnother
+-rw-------1 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/typescript
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:24 2014 tests/{45894
+
+tests/anotherfolder: 
+drwx------2 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder/.
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/anotherfolder/..
+-rw-------1 cmanj001 classes Tue Nov 11 04:47:40 2014 tests/anotherfolder/something
+-rw-------1 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder/somethingelse
+
+~/cs100/rshell
+cmanj001@hammer $ bin/ls tests -Ral[1Pl[4h-[4l[4ha[4l[4h [4l
+tests: 
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/.
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 tests/..
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:07 2014 tests/00000000222
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:11 2014 tests/02343
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:14 2014 tests/123
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:18 2014 tests/:945
+drwx------2 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder
+-rw-------1 cmanj001 classes Tue Oct 21 23:11:39 2014 tests/exec.script
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:51 2014 tests/fileA
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:56 2014 tests/fileB
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:03 2014 tests/garbage
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:00 2014 tests/random
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:28 2014 tests/randomness
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:42 2014 tests/ThisIsALongFile
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:47 2014 tests/ThisIsAnother
+-rw-------1 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/typescript
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:24 2014 tests/{45894
+
+tests/anotherfolder: 
+drwx------2 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder/.
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/anotherfolder/..
+-rw-------1 cmanj001 classes Tue Nov 11 04:47:40 2014 tests/anotherfolder/something
+-rw-------1 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder/somethingelse
+
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -a tests -Rl garbage
+Input does not exist. Filename entered: garbage
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -a tests -Rl garbage[K[K[K[K[K[K[Kexee[K[K[K[KRe[KEADME.md 
+tests: 
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/.
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 tests/..
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:07 2014 tests/00000000222
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:11 2014 tests/02343
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:14 2014 tests/123
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:18 2014 tests/:945
+drwx------2 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder
+-rw-------1 cmanj001 classes Tue Oct 21 23:11:39 2014 tests/exec.script
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:51 2014 tests/fileA
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:56 2014 tests/fileB
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:03 2014 tests/garbage
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:00 2014 tests/random
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:28 2014 tests/randomness
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:42 2014 tests/ThisIsALongFile
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:47 2014 tests/ThisIsAnother
+-rw-------1 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/typescript
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:24 2014 tests/{45894
+
+tests/anotherfolder: 
+drwx------2 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder/.
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/anotherfolder/..
+-rw-------1 cmanj001 classes Tue Nov 11 04:47:40 2014 tests/anotherfolder/something
+-rw-------1 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder/somethingelse
+
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 README.md
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -a tests -Rl README.md [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kgarbage README.md 
+Input does not exist. Filename entered: garbage
+~/cs100/rshell
+cmanj001@hammer $ bin/ls garbage README.md [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[KLICENSE -alR
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 LICENSE
+~/cs100/rshell
+cmanj001@hammer $ bin/ls LICENSE -alR[K[K[Kal[K[Kl -R
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 LICENSE
+~/cs100/rshell
+cmanj001@hammer $ bin/ls LICENSE -l -R[K[K[K[K[K[K[K[K[K[K[K[K[K.
+bin        LICENSE    Makefile   README.md  rshell.out src        tests      
+
+~/cs100/rshell
+cmanj001@hammer $ bin/ls ..
+firstrepo lab02     lab03     lab04     lab5      rshell    rshell-1  
+ucr-cs100 
+~/cs100/rshell
+cmanj001@hammer $ bin/ls .. README.md tests
+firstrepo lab02     lab03     lab04     lab5      rshell    rshell-1  
+ucr-cs100 
+README.md
+
+00000000222     02343           123             :945            
+anotherfolder   exec.script     fileA           fileB           
+garbage         random          randomness      ThisIsALongFile 
+ThisIsAnother   typescript      {45894          
+~/cs100/rshell
+cmanj001@hammer $ bin/ls .. README.md tests -l
+drwx------3 cmanj001 classes Mon Oct 13 12:47:27 2014 ../firstrepo
+drwx------2 cmanj001 classes Mon Oct 20 13:18:40 2014 ../lab02
+drwx------4 cmanj001 classes Mon Oct 27 12:58:23 2014 ../lab03
+drwx------3 cmanj001 classes Mon Nov 10 18:14:14 2014 ../lab04
+drwx------2 cmanj001 classes Mon Nov  3 14:04:42 2014 ../lab5
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 ../rshell
+drwx------5 cmanj001 classes Mon Nov  3 14:05:38 2014 ../rshell-1
+drwx------9 cmanj001 classes Mon Nov 10 16:31:31 2014 ../ucr-cs100
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 README.md
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:07 2014 tests/00000000222
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:11 2014 tests/02343
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:14 2014 tests/123
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:18 2014 tests/:945
+drwx------2 cmanj001 classes Tue Nov 11 04:47:45 2014 tests/anotherfolder
+-rw-------1 cmanj001 classes Tue Oct 21 23:11:39 2014 tests/exec.script
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:51 2014 tests/fileA
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:56 2014 tests/fileB
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:03 2014 tests/garbage
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:00 2014 tests/random
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:28 2014 tests/randomness
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:42 2014 tests/ThisIsALongFile
+-rw-------1 cmanj001 classes Mon Nov 10 20:30:47 2014 tests/ThisIsAnother
+-rw-------1 cmanj001 classes Tue Nov 11 22:40:41 2014 tests/typescript
+-rw-------1 cmanj001 classes Mon Nov 10 20:31:24 2014 tests/{45894
+~/cs100/rshell
+cmanj001@hammer $ bin/ls .. README.md tests -l[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kbin/ls .. README.md tests -l[K[K h[Kgarbage
+Input does not exist. Filename entered: garbage
+~/cs100/rshell
+cmanj001@hammer $ bin/ls .. garbage[K[K[K[K[K[K[K[K[K[K-llllll
+drwx------2 cmanj001 classes Tue Nov 11 22:35:42 2014 ./bin
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 ./LICENSE
+-rw-------1 cmanj001 classes Mon Nov 10 17:12:43 2014 ./Makefile
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 ./README.md
+-rwx------1 cmanj001 classes Mon Nov 10 02:04:00 2014 ./rshell.out
+drwx------2 cmanj001 classes Tue Nov 11 22:44:09 2014 ./src
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 ./tests
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -llllll[K[K[K[K[KaRr[K[KRRa[K[K[Klala
+drwx------6 cmanj001 classes Tue Nov 11 22:39:32 2014 ./.
+drwx------10 cmanj001 classes Mon Nov 10 11:35:08 2014 ./..
+drwx------8 cmanj001 classes Tue Nov 11 21:25:49 2014 ./.git
+drwx------2 cmanj001 classes Tue Nov 11 22:35:42 2014 ./bin
+-rw-------1 cmanj001 classes Tue Oct 21 21:33:07 2014 ./LICENSE
+-rw-------1 cmanj001 classes Mon Nov 10 17:12:43 2014 ./Makefile
+-rw-------1 cmanj001 classes Tue Oct 21 23:18:18 2014 ./README.md
+-rwx------1 cmanj001 classes Mon Nov 10 02:04:00 2014 ./rshell.out
+drwx------2 cmanj001 classes Tue Nov 11 22:44:09 2014 ./src
+drwx------3 cmanj001 classes Tue Nov 11 22:40:41 2014 ./tests
+~/cs100/rshell
+cmanj001@hammer $ bin/ls -lalala[K[K[K[K[K[K[Ktests -r
+Invalid option --- 'r' 
+~/cs100/rshell
+cmanj001@hammer $ bin/ls tests -r[Kere[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kexit
 exit
 
-Script done on Tue 21 Oct 2014 11:11:56 PM PDT
+Script done on Tue 11 Nov 2014 10:45:57 PM PST
