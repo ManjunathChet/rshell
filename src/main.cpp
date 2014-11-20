@@ -325,11 +325,82 @@ int main()
                         strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
                         strcmp(redir_commands.at(k).c_str(), ">>") == 0)
                    {
-                        redir_commands.erase(redir_commands.begin() + k, redir_commands.begin() + k + 1);
+                        redir_commands.erase(redir_commands.begin() + k, redir_commands.begin() + k + 2);
                         k = 0;
                    }
                 }
                 
+                bool std_in = false;
+                bool std_out = false;
+                bool append = false;
+
+                for( vector<int>::size_type k=0; k != redirs.size(); k++)  //iterate though the command vector
+                {
+                    string current = redirs.at(k);
+
+                    if (    strcmp(current.substr(0,1).c_str(), "<" ) == 0 &&
+                            std_in == false)
+                    {
+                        string in = current.substr(3);
+                        int fd = open(in.c_str(), O_RDONLY);
+                        if (fd == -1)
+                        {
+                            perror("open");
+                        }
+                        if(close(0) == -1)
+                        {
+                            perror("close");
+                        }
+                        if (dup(fd) == -1)
+                        {
+                            perror("dup");
+                        
+                        }
+                        std_in = true;
+                    }
+
+                    if (    (strcmp(current.substr(0,1).c_str(), ">" ) == 0 ||
+                            strcmp(current.substr(0,1).c_str(), ">>" ) == 0) &&
+                            std_out == false)
+                    {
+                        if( strcmp(current.substr(0,1).c_str(), ">>" ) == 0)
+                        {
+                            append = true;
+                        }
+
+                        int fd2;
+                        
+                        string in = current.substr(3);
+                        
+                        if (append == true)
+                        {
+                            fd2 = open(in.c_str(), O_RDWR, O_APPEND);
+                        }
+
+                        else
+                        {
+                            fd2 = open(in.c_str(), O_RDWR);
+                        }
+                        if (fd2 == -1)
+                        {
+                            perror("open");
+                        }
+                        if(close(1) == -1)
+                        {
+                            perror("close");
+                        }
+                        if (dup(fd2) == -1)
+                        {
+                            perror("dup");
+                        
+                        }
+                        std_out = true;
+                    }
+
+                    execute(redir_commands.at(0));
+                        
+                }
+
 
             }
             //int code = execute(commands[i]);    //execute each command stored in the vector.
