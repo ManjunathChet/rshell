@@ -14,8 +14,73 @@
 
 using namespace std;
 
-string first_delim(string& command) //first_delim() finds the first delimiter in a string.
+string first_pipe(string& command) //first_delim() finds the first delimiter in a string.
+{
+    map <int, string> redir_locations;  //The function pushes all connecters into a map
+                                        //Since a map is ordered, it uses the first connecter
+                                        //and identifies it as the first delim.
+    bool nothing_found = true;
 
+    size_t found_pipe = command.find("|");
+
+    if (found_pipe!= std::string::npos)       //if a '||' is found, push its posistion into the map
+    {
+        redir_locations[found_pipe] = "|";
+        nothing_found = false; 
+    }
+    if (nothing_found == true)              //if no connectors are found, return nothing right away.
+    {
+        return "";
+    }
+
+    map <int, string>::iterator it = redir_locations.begin();   //initialize the iterator that will
+                                                                //go through the map
+
+    if( it != redir_locations.end())
+    {
+        return it -> second;                //return the first connector if any exist
+    }
+    else
+    {
+        return "";
+    }
+}
+
+void pipe_parse(     string& command,            //parse() uses first_delim() to break a line of commands into
+                vector<string>& pipes,     //single commands that execute() can run. It takes in  a vector
+                vector<string>& pipe_commands)   //of commands and another vector of ordered connectors.
+{
+    size_t position = 0;                    //initialize position for my psuedo tokenizer.
+    string tok;
+       
+    string pipe = first_pipe(command);    //Pass the input through first_delim() and find the first connector
+
+    if (pipe.empty())                      //if there is no connector, push the command through by itself.
+    {                                       //The commands are pushed onto a vector that stores each induvidually.
+        pipe_commands.push_back(command);
+    }
+    if (!pipe.empty())
+    {
+        while (!pipe.empty())                  //If there is a connector, push each command onto the vector and
+        {                                       //truncate each the command up till the connector each time.
+            position = command.find(pipe);
+            tok = command.substr(0, position);
+
+            pipes.push_back(pipe);
+            pipe_commands.push_back(tok);
+
+            command.erase(0, position + pipe.length());
+
+            pipe = first_pipe(command);
+        }
+
+    pipe_commands.push_back(command);            //If there is a command not followed by a connector, dont forget
+    
+    }                                       //to push it.
+}
+
+
+string first_delim(string& command) //first_delim() finds the first delimiter in a string.
 {
     map <int, string> delim_locations;  //The function pushes all connecters into a map
                                         //Since a map is ordered, it uses the first connecter
@@ -166,38 +231,6 @@ int execute(string command)                 //Execute takes one command from the
         exit(0);
     }
 
-    //int array_pos = 0;
-
-    //while (argv[array_pos] != NULL)
-    //{
-    //    
-    //}
-
-    int fd = open(argv[1],  O_CREAT, S_IRWXU);
-    if (fd == -1)
-    {
-        perror("open");
-    }
-
-    int fd2 = open(argv[2], O_CREAT, S_IRWXU);
-    if (fd2 == -1)
-    {
-        perror("open");
-    }
-
-    char buf[1024];
-    
-    ssize_t read_bytes =  read(fd, buf, sizeof(buf)); 
-    if(read_bytes == -1)
-    {
-        perror("read");
-    }
-
-    ssize_t write_bytes =  write(fd2, buf, sizeof(buf)); 
-    if(write_bytes == -1)
-    {
-        perror("write");
-    }
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
@@ -230,7 +263,12 @@ int main()
     string input;               //user input
     vector<string> delims;      //vector of connectors
     vector<string> commands;    //vector of commands
-    vector<string> redirect;    //vector of redirectors
+    
+    vector<string> pipes;
+    vector<string> pipe_commands;
+
+    vector<string> redirs;
+    vector<string> redir_commands;
 
     struct passwd *user = getpwuid(getuid());   //user info retrieval
     if (user == NULL)       
@@ -243,28 +281,76 @@ int main()
         cout<<user -> pw_name <<" $ ";      //output prompt
         getline(cin, input);                //get input
         parse(input, delims, commands);     //parse input
-        
-       for( vector<int>::size_type i=0; i != commands.size(); i++)  //iterate though the command vector
-        {                                                           
-            int code = execute(commands[i]);    //execute each command stored in the vector.
-            
-            if (i < commands.size() - 1)
+
+        for( vector<int>::size_type i=0; i != commands.size(); i++)  //iterate though the command vector
+        {   
+            pipe_parse(commands[i], pipes, pipe_commands);
+
+            for( vector<int>::size_type j=0; j != pipe_commands.size(); j++)  //iterate though the command vector
             {
-                if(code != 0)   //if the code failed, dont run the next command if its &&'d
+                char *point;
+                
+                char *curr = strdup(pipe_commands[j].c_str()); //Convert string to char*
+                if (curr == NULL)
                 {
-                    if(delims[i].compare("&&") == 0)
-                    {
-                         break;
-                    }
+                    perror("strdup");    //Error checking strdup
                 }
-                if(code == 0)   //if the code was good, dont run the next command if ||'d
+
+                point = strtok (curr, " ");          //tokenize the command and split arguments from command.
+                
+                while ( point != NULL)
+                {  
+                    redir_commands.push_back(point);
+                    point = strtok (NULL, " ");             //error check, add a NULL terminator.
+                }
+                
+                for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
                 {
-                    if(delims[i].compare("||") == 0)
-                    {
-                        break;
-                    }
+                   if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
+                        strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
+                        strcmp(redir_commands.at(k).c_str(), ">>") == 0)
+                   {
+                        string appended_redir;
+                        appended_redir.append(redir_commands.at(k));
+                        appended_redir.append(" ");
+                        appended_redir.append(redir_commands.at(k+1));
+
+                        redirs.push_back(appended_redir);
+                   }
                 }
+                
+                for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
+                {
+                   if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
+                        strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
+                        strcmp(redir_commands.at(k).c_str(), ">>") == 0)
+                   {
+                        redir_commands.erase(redir_commands.begin() + k, redir_commands.begin() + k + 1);
+                        k = 0;
+                   }
+                }
+                
+
             }
+            //int code = execute(commands[i]);    //execute each command stored in the vector.
+            //
+            //if (i < commands.size() - 1)
+            //{
+            //    if(code != 0)   //if the code failed, dont run the next command if its &&'d
+            //    {
+            //        if(delims[i].compare("&&") == 0)
+            //        {
+            //             break;
+            //        }
+            //    }
+            //    if(code == 0)   //if the code was good, dont run the next command if ||'d
+            //    {
+            //        if(delims[i].compare("||") == 0)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //}
         }
 
        commands.clear();    //clear vectors for next getline.
