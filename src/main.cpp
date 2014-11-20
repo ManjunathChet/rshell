@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 using namespace std;
 
@@ -164,7 +166,38 @@ int execute(string command)                 //Execute takes one command from the
         exit(0);
     }
 
+    //int array_pos = 0;
 
+    //while (argv[array_pos] != NULL)
+    //{
+    //    
+    //}
+
+    int fd = open(argv[1],  O_CREAT, S_IRWXU);
+    if (fd == -1)
+    {
+        perror("open");
+    }
+
+    int fd2 = open(argv[2], O_CREAT, S_IRWXU);
+    if (fd2 == -1)
+    {
+        perror("open");
+    }
+
+    char buf[1024];
+    
+    ssize_t read_bytes =  read(fd, buf, sizeof(buf)); 
+    if(read_bytes == -1)
+    {
+        perror("read");
+    }
+
+    ssize_t write_bytes =  write(fd2, buf, sizeof(buf)); 
+    if(write_bytes == -1)
+    {
+        perror("write");
+    }
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
@@ -197,6 +230,7 @@ int main()
     string input;               //user input
     vector<string> delims;      //vector of connectors
     vector<string> commands;    //vector of commands
+    vector<string> redirect;    //vector of redirectors
 
     struct passwd *user = getpwuid(getuid());   //user info retrieval
     if (user == NULL)       
