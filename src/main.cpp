@@ -237,7 +237,9 @@ int execute(string command, vector<string> redirs)                 //Execute tak
         bool std_in = false;
         bool std_out = false;
         bool append = false;
-
+    
+        if(!redirs.empty())
+        {
         for( vector<int>::size_type k=0; k != redirs.size(); k++)  //iterate though the command vector
         {
             string current = redirs.at(k);
@@ -246,7 +248,7 @@ int execute(string command, vector<string> redirs)                 //Execute tak
                     std_in == false)
             {
                 string in = current.substr(2);
-                int fd = open(in.c_str(), O_RDONLY);
+                int fd = open(in.c_str(), O_RDWR);
                 if (fd == -1)
                 {
                     perror("open1");
@@ -267,6 +269,7 @@ int execute(string command, vector<string> redirs)                 //Execute tak
                         strcmp(current.substr(0,1).c_str(), ">>" ) == 0) &&
                     std_out == false)
             {
+
                 if( strcmp(current.substr(0,1).c_str(), ">>" ) == 0)
                 {
                     append = true;
@@ -278,12 +281,13 @@ int execute(string command, vector<string> redirs)                 //Execute tak
 
                 if (append == true)
                 {
-                    fd2 = open(out.c_str(), O_RDWR, O_APPEND);
+                    fd2 = open(out.c_str(), O_APPEND | O_CREAT);
                 }
 
                 else
                 {
-                    fd2 = open(out.c_str(), O_RDWR);
+                    fd2 = open(out.c_str(), O_CREAT);
+                    
                 }
                 if (fd2 == -1)
                 {
@@ -296,16 +300,20 @@ int execute(string command, vector<string> redirs)                 //Execute tak
                 if (dup(fd2) == -1)
                 {
                     perror("dup2");
-
+                    
                 }
                 std_out = true;
             }
+        }
 
             if (execvp ( argv[0], argv) != 0)       //execvp() runs the command with arguments.
             {
                 perror("execvp failed");            //Error checking execvp()
                 exit(1);
             }
+
+            close(0);
+            close(1);
 
         }
     }

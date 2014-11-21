@@ -92,6 +92,18 @@ file_a and fill it with `hello world` inside. Rshell does not create the file.
 
 * Rshell does not have the up-arrow down-arrow macro for command retrieval.
 
+INPUT REDIRECTION/PIPING:
+
+* Rshell was designed to handle input redirection and piping, but only one part of redirection is funtional.
+
+* Only `<` is functional. The output redirection commands and piping do not work in this version.
+
+* For the input redirection to work, there must be a space between all arguments being passed in.
+For example: `cat<input.txt` will not work, it must be `cat < input.txt`
+
+* If there are multiple input redirectors specified, only the first one will be read in.
+
+
 LS:
 
 * `ls -l` does not support the OSX filetype recognition.
