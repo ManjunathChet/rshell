@@ -168,7 +168,7 @@ void parse(     string& command,            //parse() uses first_delim() to brea
 
 }
             
-int execute(string command)                 //Execute takes one command from the command vector and runs it.
+int execute(string command, vector<string> redirs)                 //Execute takes one command from the command vector and runs it.
 {
     int status;                 //child process status
 
@@ -183,8 +183,8 @@ int execute(string command)                 //Execute takes one command from the
     bool this_a_word = false;       //string. The way this is done is with a "switch" called
                                     //this_a_word which "flips" everytime a word is found.
     int word_count = 0;             
-    
-    
+
+
 
     while (*iterate != '\0')
     {
@@ -200,32 +200,32 @@ int execute(string command)                 //Execute takes one command from the
                 word_count++;
             }
         }
-        
+
         iterate++;
     }
-        if (word_count == 0)        //If there are no words, then return a success tag and do nothing.
-        {
-            return(0);
-        }
-        
-        char** argv = (char  **) 
-            malloc(sizeof(char*) * ++word_count);   //Once the word count is found, malloc() dynamically
-                                                    //allocates memory for the input array. This is required
-                                                    //since array size must be allocated at compile time.
-        char *point;
-         
-        point = strtok (char_string, " ");          //tokenize the command and split arguments from command.
-        
-        
-        int i = 0;
-        while ( point != NULL)
-        {   
-            argv[i++] = point;
-            point = strtok (NULL, " ");             //error check, add a NULL terminator.
-        }
-        
+    if (word_count == 0)        //If there are no words, then return a success tag and do nothing.
+    {
+        return(0);
+    }
+
+    char** argv = (char  **) 
+        malloc(sizeof(char*) * ++word_count);   //Once the word count is found, malloc() dynamically
+    //allocates memory for the input array. This is required
+    //since array size must be allocated at compile time.
+    char *point;
+
+    point = strtok (char_string, " ");          //tokenize the command and split arguments from command.
+
+
+    int i = 0;
+    while ( point != NULL)
+    {   
+        argv[i++] = point;
+        point = strtok (NULL, " ");             //error check, add a NULL terminator.
+    }
+
     argv[i] = NULL;
-    
+
     if (strcmp(argv[0], "exit") == 0 )              //If the user input 'exit' quit the program.
     {
         exit(0);
@@ -234,13 +234,80 @@ int execute(string command)                 //Execute takes one command from the
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
+        bool std_in = false;
+        bool std_out = false;
+        bool append = false;
 
-        if (execvp ( argv[0], argv) != 0)       //execvp() runs the command with arguments.
+        for( vector<int>::size_type k=0; k != redirs.size(); k++)  //iterate though the command vector
         {
-            perror("execvp failed");            //Error checking execvp()
-            exit(1);
-        }
+            string current = redirs.at(k);
 
+            if (    strcmp(current.substr(0,1).c_str(), "<" ) == 0 &&
+                    std_in == false)
+            {
+                string in = current.substr(2);
+                int fd = open(in.c_str(), O_RDONLY);
+                if (fd == -1)
+                {
+                    perror("open1");
+                }
+                if(close(0) == -1)
+                {
+                    perror("close1");
+                }
+                if (dup(fd) == -1)
+                {
+                    perror("dup1");
+
+                }
+                std_in = true;
+            }
+
+            if (    (strcmp(current.substr(0,1).c_str(), ">" ) == 0 ||
+                        strcmp(current.substr(0,1).c_str(), ">>" ) == 0) &&
+                    std_out == false)
+            {
+                if( strcmp(current.substr(0,1).c_str(), ">>" ) == 0)
+                {
+                    append = true;
+                }
+
+                int fd2;
+
+                string out = current.substr(2);
+
+                if (append == true)
+                {
+                    fd2 = open(out.c_str(), O_RDWR, O_APPEND);
+                }
+
+                else
+                {
+                    fd2 = open(out.c_str(), O_RDWR);
+                }
+                if (fd2 == -1)
+                {
+                    perror("open2");
+                }
+                if(close(1) == -1)
+                {
+                    perror("close2");
+                }
+                if (dup(fd2) == -1)
+                {
+                    perror("dup2");
+
+                }
+                std_out = true;
+            }
+
+            if (execvp ( argv[0], argv) != 0)       //execvp() runs the command with arguments.
+            {
+                perror("execvp failed");            //Error checking execvp()
+                exit(1);
+            }
+
+        }
     }
     else if (pid != 0)
     {
@@ -253,7 +320,7 @@ int execute(string command)                 //Execute takes one command from the
 
         return status;              //Return the code status of the executed process.
     }
-    
+
     return -1;
 }
 
@@ -263,7 +330,7 @@ int main()
     string input;               //user input
     vector<string> delims;      //vector of connectors
     vector<string> commands;    //vector of commands
-    
+
     vector<string> pipes;
     vector<string> pipe_commands;
 
@@ -289,7 +356,7 @@ int main()
             for( vector<int>::size_type j=0; j != pipe_commands.size(); j++)  //iterate though the command vector
             {
                 char *point;
-                
+
                 char *curr = strdup(pipe_commands[j].c_str()); //Convert string to char*
                 if (curr == NULL)
                 {
@@ -297,112 +364,56 @@ int main()
                 }
 
                 point = strtok (curr, " ");          //tokenize the command and split arguments from command.
-                
+
                 while ( point != NULL)
                 {  
                     redir_commands.push_back(point);
                     point = strtok (NULL, " ");             //error check, add a NULL terminator.
                 }
-                
+
                 for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
                 {
-                   if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
-                        strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
-                        strcmp(redir_commands.at(k).c_str(), ">>") == 0)
-                   {
+                    if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
+                            strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
+                            strcmp(redir_commands.at(k).c_str(), ">>") == 0)
+                    {
                         string appended_redir;
                         appended_redir.append(redir_commands.at(k));
                         appended_redir.append(" ");
                         appended_redir.append(redir_commands.at(k+1));
 
                         redirs.push_back(appended_redir);
-                   }
+                    }
                 }
-                
+
                 for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
                 {
-                   if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
-                        strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
-                        strcmp(redir_commands.at(k).c_str(), ">>") == 0)
-                   {
+                    if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
+                            strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
+                            strcmp(redir_commands.at(k).c_str(), ">>") == 0)
+                    {
                         redir_commands.erase(redir_commands.begin() + k, redir_commands.begin() + k + 2);
                         k = 0;
-                   }
+                    }
                 }
-                
-                bool std_in = false;
-                bool std_out = false;
-                bool append = false;
 
-                for( vector<int>::size_type k=0; k != redirs.size(); k++)  //iterate though the command vector
+                string n_command;
+
+                for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
                 {
-                    string current = redirs.at(k);
+                    n_command.append(redir_commands.at(k));
+                    n_command.append(" ");
 
-                    if (    strcmp(current.substr(0,1).c_str(), "<" ) == 0 &&
-                            std_in == false)
-                    {
-                        string in = current.substr(3);
-                        int fd = open(in.c_str(), O_RDONLY);
-                        if (fd == -1)
-                        {
-                            perror("open");
-                        }
-                        if(close(0) == -1)
-                        {
-                            perror("close");
-                        }
-                        if (dup(fd) == -1)
-                        {
-                            perror("dup");
-                        
-                        }
-                        std_in = true;
-                    }
-
-                    if (    (strcmp(current.substr(0,1).c_str(), ">" ) == 0 ||
-                            strcmp(current.substr(0,1).c_str(), ">>" ) == 0) &&
-                            std_out == false)
-                    {
-                        if( strcmp(current.substr(0,1).c_str(), ">>" ) == 0)
-                        {
-                            append = true;
-                        }
-
-                        int fd2;
-                        
-                        string in = current.substr(3);
-                        
-                        if (append == true)
-                        {
-                            fd2 = open(in.c_str(), O_RDWR, O_APPEND);
-                        }
-
-                        else
-                        {
-                            fd2 = open(in.c_str(), O_RDWR);
-                        }
-                        if (fd2 == -1)
-                        {
-                            perror("open");
-                        }
-                        if(close(1) == -1)
-                        {
-                            perror("close");
-                        }
-                        if (dup(fd2) == -1)
-                        {
-                            perror("dup");
-                        
-                        }
-                        std_out = true;
-                    }
-
-                    execute(redir_commands.at(0));
-                        
                 }
 
+                execute(n_command, redirs);
 
+                redir_commands.clear();
+                redirs.clear();
             }
+            
+            pipes.clear();
+            pipe_commands.clear();
             //int code = execute(commands[i]);    //execute each command stored in the vector.
             //
             //if (i < commands.size() - 1)
@@ -424,8 +435,8 @@ int main()
             //}
         }
 
-       commands.clear();    //clear vectors for next getline.
-       delims.clear();
+        commands.clear();    //clear vectors for next getline.
+        delims.clear();
     }
 
     return -1;
