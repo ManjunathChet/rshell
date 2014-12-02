@@ -104,8 +104,10 @@ void parse(     string& command,            //parse() uses first_delim() to brea
 
 void sig_handler_c (int signum)
 {
-    cout << "signum is: "<<signum << endl;
-    kill(0, SIGHUP);
+    if (kill(0, signum) != 0)
+    {
+        perror("kill");
+    }
 }
 
 
@@ -175,6 +177,8 @@ int execute(string command)                 //Execute takes one command from the
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
+        signal(SIGINT, sig_handler_c);
+
         char* pPath;
         pPath = getenv ("PATH");
         if (pPath == NULL)
@@ -200,7 +204,7 @@ int execute(string command)                 //Execute takes one command from the
         for( vector<char*>::size_type i=0; i != path_list.size(); i++)
         {
             char* appended_path = new char [strlen(path_list.at(i)) + 
-                strlen(initial_command) + 1];
+                strlen(initial_command) + 10];
 
             strcpy( appended_path, path_list.at(i));
             if( appended_path[strlen(appended_path)-1] != '/')
@@ -237,7 +241,7 @@ int execute(string command)                 //Execute takes one command from the
 
 int main()
 {
-    signal(SIGINT, sig_handler_c);
+    //signal(SIGINT, sig_handler_c);
 
     string input;               //user input
     vector<string> delims;      //vector of connectors
