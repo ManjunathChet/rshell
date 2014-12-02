@@ -16,8 +16,8 @@ string first_delim(string& command) //first_delim() finds the first delimiter in
 
 {
     map <int, string> delim_locations;  //The function pushes all connecters into a map
-                                        //Since a map is ordered, it uses the first connecter
-                                        //and identifies it as the first delim.
+    //Since a map is ordered, it uses the first connecter
+    //and identifies it as the first delim.
     bool nothing_found = true;
 
     size_t found_sem = command.find(";");   //Connecters to check for.
@@ -47,7 +47,7 @@ string first_delim(string& command) //first_delim() finds the first delimiter in
     }
 
     map <int, string>::iterator it = delim_locations.begin();   //initialize the iterator that will
-                                                                //go through the map
+    //go through the map
 
     if( it != delim_locations.end())
     {
@@ -60,15 +60,15 @@ string first_delim(string& command) //first_delim() finds the first delimiter in
 }
 
 void parse(     string& command,            //parse() uses first_delim() to break a line of commands into
-                vector<string>& delims,     //single commands that execute() can run. It takes in  a vector
-                vector<string>& commands)   //of commands and another vector of ordered connectors.
+        vector<string>& delims,     //single commands that execute() can run. It takes in  a vector
+        vector<string>& commands)   //of commands and another vector of ordered connectors.
 {
     size_t position = 0;                    //initialize position for my psuedo tokenizer.
     string tok;
-        
+
     size_t comment_pos = 0;                 //If there is a '#' in the string, ignore everything after.
     comment_pos = command.find("#");
-    
+
     if (comment_pos != std::string::npos) 
     {
         command.erase(comment_pos);
@@ -82,25 +82,25 @@ void parse(     string& command,            //parse() uses first_delim() to brea
     }
     if (!delim.empty())
     {
-    while (!delim.empty())                  //If there is a connector, push each command onto the vector and
-    {                                       //truncate each the command up till the connector each time.
-        position = command.find(delim);
-        tok = command.substr(0, position);
+        while (!delim.empty())                  //If there is a connector, push each command onto the vector and
+        {                                       //truncate each the command up till the connector each time.
+            position = command.find(delim);
+            tok = command.substr(0, position);
 
-        delims.push_back(delim);
-        commands.push_back(tok);
+            delims.push_back(delim);
+            commands.push_back(tok);
 
-        command.erase(0, position + delim.length());
+            command.erase(0, position + delim.length());
 
-        delim = first_delim(command);
-    }
+            delim = first_delim(command);
+        }
 
-    commands.push_back(command);            //If there is a command not followed by a connector, dont forget
+        commands.push_back(command);            //If there is a command not followed by a connector, dont forget
     }                                       //to push it.
-    
+
 
 }
-            
+
 int execute(string command)                 //Execute takes one command from the command vector and runs it.
 {
     int status;                 //child process status
@@ -112,12 +112,12 @@ int execute(string command)                 //Execute takes one command from the
     }
 
     char *iterate = char_string;    //Iterate runs through each char in a the string.
-                                    //It is used to identify how many words are in the
+    //It is used to identify how many words are in the
     bool this_a_word = false;       //string. The way this is done is with a "switch" called
-                                    //this_a_word which "flips" everytime a word is found.
+    //this_a_word which "flips" everytime a word is found.
     int word_count = 0;             
-    
-    
+
+
 
     while (*iterate != '\0')
     {
@@ -133,49 +133,85 @@ int execute(string command)                 //Execute takes one command from the
                 word_count++;
             }
         }
-        
+
         iterate++;
     }
-        if (word_count == 0)        //If there are no words, then return a success tag and do nothing.
-        {
-            return(0);
-        }
-        
-        char** argv = (char  **) 
-            malloc(sizeof(char*) * ++word_count);   //Once the word count is found, malloc() dynamically
-                                                    //allocates memory for the input array. This is required
-                                                    //since array size must be allocated at compile time.
-        char *point;
-         
-        point = strtok (char_string, " ");          //tokenize the command and split arguments from command.
-        
-        
-        int i = 0;
-        while ( point != NULL)
-        {   
-            argv[i++] = point;
-            point = strtok (NULL, " ");             //error check, add a NULL terminator.
-        }
-        
+    if (word_count == 0)        //If there are no words, then return a success tag and do nothing.
+    {
+        return(0);
+    }
+
+    char** argv = (char  **) 
+        malloc(sizeof(char*) * ++word_count);   //Once the word count is found, malloc() dynamically
+    //allocates memory for the input array. This is required
+    //since array size must be allocated at compile time.
+    char *point;
+
+    point = strtok (char_string, " ");          //tokenize the command and split arguments from command.
+
+
+    int i = 0;
+    while ( point != NULL)
+    {   
+        argv[i++] = point;
+        point = strtok (NULL, " ");             //error check, add a NULL terminator.
+    }
+
     argv[i] = NULL;
-    
+
     if (strcmp(argv[0], "exit") == 0 )              //If the user input 'exit' quit the program.
     {
         exit(0);
     }
 
-
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
 
-        if (execvp ( argv[0], argv) != 0)       //execvp() runs the command with arguments.
+        char* pPath;
+        pPath = getenv ("PATH");
+        if (pPath == NULL)
         {
-            perror("execvp failed");            //Error checking execvp()
-            exit(1);
+            perror("getenv");
         }
 
+        //printf ("The current path is: %s\n",pPath);
+
+        vector <char* > path_list;
+        char* path_tok;
+
+        path_tok = strtok ( pPath, ":");
+
+        while ( path_tok != NULL)
+        {
+            path_list.push_back(path_tok);
+            path_tok = strtok (NULL, ":");
+        }
+
+        char* initial_command = argv[0];
+
+        for( vector<char*>::size_type i=0; i != path_list.size(); i++)
+        {
+            char* appended_path = new char [strlen(path_list.at(i)) + 
+                strlen(initial_command) + 1];
+
+            strcpy( appended_path, path_list.at(i));
+            if( appended_path[strlen(appended_path)-1] != '/')
+            {
+                strcat( appended_path, "/");
+            }
+            strcat( appended_path, initial_command);
+
+            argv[0] = appended_path;
+
+            if (execv ( argv[0], argv) != 0 && i == path_list.size()-1)       //execv() runs the command with arguments.
+            {
+                perror("execv failed");            //Error checking execv()
+                exit(1);
+            }
+        }
     }
+
     else if (pid != 0)
     {
         while (wait(&status) != pid)            //The parent process waits for child to die. The status 
@@ -187,9 +223,10 @@ int execute(string command)                 //Execute takes one command from the
 
         return status;              //Return the code status of the executed process.
     }
-    
+
     return -1;
 }
+
 
 int main()
 {
@@ -209,18 +246,18 @@ int main()
         cout<<user -> pw_name <<" $ ";      //output prompt
         getline(cin, input);                //get input
         parse(input, delims, commands);     //parse input
-        
-       for( vector<int>::size_type i=0; i != commands.size(); i++)  //iterate though the command vector
+
+        for( vector<int>::size_type i=0; i != commands.size(); i++)  //iterate though the command vector
         {                                                           
             int code = execute(commands[i]);    //execute each command stored in the vector.
-            
+
             if (i < commands.size() - 1)
             {
                 if(code != 0)   //if the code failed, dont run the next command if its &&'d
                 {
                     if(delims[i].compare("&&") == 0)
                     {
-                         break;
+                        break;
                     }
                 }
                 if(code == 0)   //if the code was good, dont run the next command if ||'d
@@ -233,8 +270,8 @@ int main()
             }
         }
 
-       commands.clear();    //clear vectors for next getline.
-       delims.clear();
+        commands.clear();    //clear vectors for next getline.
+        delims.clear();
     }
 
     return -1;
