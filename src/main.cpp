@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
+#include <signal.h>
 
 using namespace std;
 
@@ -101,6 +102,13 @@ void parse(     string& command,            //parse() uses first_delim() to brea
 
 }
 
+void sig_handler_c (int signum)
+{
+    cout << "signum is: "<<signum << endl;
+    kill(0, SIGHUP);
+}
+
+
 int execute(string command)                 //Execute takes one command from the command vector and runs it.
 {
     int status;                 //child process status
@@ -167,7 +175,6 @@ int execute(string command)                 //Execute takes one command from the
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
-
         char* pPath;
         pPath = getenv ("PATH");
         if (pPath == NULL)
@@ -214,6 +221,7 @@ int execute(string command)                 //Execute takes one command from the
 
     else if (pid != 0)
     {
+
         while (wait(&status) != pid)            //The parent process waits for child to die. The status 
         {                                       //of this process changes accordingly. If it throws out
             perror("wait failed");              //a non-0, the child process failed.
@@ -227,9 +235,9 @@ int execute(string command)                 //Execute takes one command from the
     return -1;
 }
 
-
 int main()
 {
+    signal(SIGINT, sig_handler_c);
 
     string input;               //user input
     vector<string> delims;      //vector of connectors
