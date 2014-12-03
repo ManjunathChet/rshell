@@ -104,12 +104,18 @@ void parse(     string& command,            //parse() uses first_delim() to brea
 
 void sig_handler_c (int signum)
 {
-    if (kill(0, signum) != 0)
-    {
-        perror("kill");
-    }
+    signum++;
+ //   if (kill(0, signum) != 0)
+ //  {
+ //       perror("kill");
+ //   }
 }
 
+void sig_handler_z(int signum)
+{
+    signum++;
+    raise(SIGSTOP);
+}
 
 int execute(string command)                 //Execute takes one command from the command vector and runs it.
 {
@@ -177,8 +183,6 @@ int execute(string command)                 //Execute takes one command from the
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
-        signal(SIGINT, sig_handler_c);
-
         char* pPath;
         pPath = getenv ("PATH");
         if (pPath == NULL)
@@ -186,7 +190,7 @@ int execute(string command)                 //Execute takes one command from the
             perror("getenv");
         }
 
-        //printf ("The current path is: %s\n",pPath);
+       // printf ("The current path is: %s\n",pPath);
 
         vector <char* > path_list;
         char* path_tok;
@@ -225,7 +229,8 @@ int execute(string command)                 //Execute takes one command from the
 
     else if (pid != 0)
     {
-
+        signal(SIGINT, sig_handler_c);
+        signal(SIGTSTP,sig_handler_z);
         while (wait(&status) != pid)            //The parent process waits for child to die. The status 
         {                                       //of this process changes accordingly. If it throws out
             perror("wait failed");              //a non-0, the child process failed.
