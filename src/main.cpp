@@ -1,3 +1,4 @@
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -9,134 +10,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pwd.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include <signal.h>
 
 using namespace std;
 
-string first_pipe(string& command) //first_delim() finds the first delimiter in a string.
+string first_delim(string& command) //first_delim() finds the first delimiter in a string.
+
 {
-    map <int, string> redir_locations;  //The function pushes all connecters into a map
-                                        //Since a map is ordered, it uses the first connecter
-                                        //and identifies it as the first delim.
-    bool nothing_found = true;
+        map <int, string> delim_locations;  //The function pushes all connecters into a map
+            //Since a map is ordered, it uses the first connecter
+                //and identifies it as the first delim.
+        bool nothing_found = true;
 
-    size_t found_pipe = command.find("|");
+        size_t found_sem = command.find(";");   //Connecters to check for.
+        size_t found_and = command.find("&&");
+        size_t found_or = command.find("||");
 
-    if (found_pipe!= std::string::npos)       //if a '||' is found, push its posistion into the map
-    {
-        redir_locations[found_pipe] = "|";
-        nothing_found = false; 
-    }
-    if (nothing_found == true)              //if no connectors are found, return nothing right away.
-    {
-        return "";
-    }
-
-    map <int, string>::iterator it = redir_locations.begin();   //initialize the iterator that will
-                                                                //go through the map
-
-    if( it != redir_locations.end())
-    {
-        return it -> second;                //return the first connector if any exist
-    }
-    else
-    {
-        return "";
-    }
-}
-
-void pipe_parse(     string& command,            //parse() uses first_delim() to break a line of commands into
-                vector<string>& pipes,     //single commands that execute() can run. It takes in  a vector
-                vector<string>& pipe_commands)   //of commands and another vector of ordered connectors.
-{
-    size_t position = 0;                    //initialize position for my psuedo tokenizer.
-    string tok;
-       
-    string pipe = first_pipe(command);    //Pass the input through first_delim() and find the first connector
-
-    if (pipe.empty())                      //if there is no connector, push the command through by itself.
-    {                                       //The commands are pushed onto a vector that stores each induvidually.
-        pipe_commands.push_back(command);
-    }
-    if (!pipe.empty())
-    {
-        while (!pipe.empty())                  //If there is a connector, push each command onto the vector and
-        {                                       //truncate each the command up till the connector each time.
-            position = command.find(pipe);
-            tok = command.substr(0, position);
-
-            pipes.push_back(pipe);
-            pipe_commands.push_back(tok);
-
-            command.erase(0, position + pipe.length());
-
-            pipe = first_pipe(command);
+        if (found_sem!= std::string::npos)      //if a ';' is found, push its posistion into the map
+        {
+            delim_locations[found_sem] = ";";
+            nothing_found = false;
         }
 
-    pipe_commands.push_back(command);            //If there is a command not followed by a connector, dont forget
-    
-    }                                       //to push it.
-}
+        if (found_and!= std::string::npos)      //if a '&&' is found, push its posistion into the map
+        {
+            delim_locations[found_and] = "&&";
+            nothing_found = false;
+        }
 
+        if (found_or!= std::string::npos)       //if a '||' is found, push its posistion into the map
+        {
+            delim_locations[found_or] = "||";
+            nothing_found = false;
+        }
+        if (nothing_found == true)              //if no connectors are found, return nothing right away.
+        {
+            return "";
+        }
 
-string first_delim(string& command) //first_delim() finds the first delimiter in a string.
-{
-    map <int, string> delim_locations;  //The function pushes all connecters into a map
-                                        //Since a map is ordered, it uses the first connecter
-                                        //and identifies it as the first delim.
-    bool nothing_found = true;
+        map <int, string>::iterator it = delim_locations.begin();   //initialize the iterator that will
+        //go through the map
 
-    size_t found_sem = command.find(";");   //Connecters to check for.
-    size_t found_and = command.find("&&");
-    size_t found_or = command.find("||");
-
-    if (found_sem!= std::string::npos)      //if a ';' is found, push its posistion into the map
-    {
-        delim_locations[found_sem] = ";";
-        nothing_found = false;
-    }
-
-    if (found_and!= std::string::npos)      //if a '&&' is found, push its posistion into the map
-    {
-        delim_locations[found_and] = "&&";
-        nothing_found = false;
-    }
-
-    if (found_or!= std::string::npos)       //if a '||' is found, push its posistion into the map
-    {
-        delim_locations[found_or] = "||";
-        nothing_found = false; 
-    }
-    if (nothing_found == true)              //if no connectors are found, return nothing right away.
-    {
-        return "";
-    }
-
-    map <int, string>::iterator it = delim_locations.begin();   //initialize the iterator that will
-                                                                //go through the map
-
-    if( it != delim_locations.end())
-    {
-        return it -> second;                //return the first connector if any exist
-    }
-    else
-    {
-        return "";
-    }
+        if( it != delim_locations.end())
+        {
+            return it -> second;                //return the first connector if any exist
+        }
+        else
+        {
+            return "";
+        }
 }
 
 void parse(     string& command,            //parse() uses first_delim() to break a line of commands into
-                vector<string>& delims,     //single commands that execute() can run. It takes in  a vector
-                vector<string>& commands)   //of commands and another vector of ordered connectors.
+        vector<string>& delims,     //single commands that execute() can run. It takes in  a vector
+        vector<string>& commands)   //of commands and another vector of ordered connectors.
 {
     size_t position = 0;                    //initialize position for my psuedo tokenizer.
     string tok;
-        
+
     size_t comment_pos = 0;                 //If there is a '#' in the string, ignore everything after.
     comment_pos = command.find("#");
-    
-    if (comment_pos != std::string::npos) 
+
+    if (comment_pos != std::string::npos)
     {
         command.erase(comment_pos);
     }
@@ -149,26 +84,35 @@ void parse(     string& command,            //parse() uses first_delim() to brea
     }
     if (!delim.empty())
     {
-    while (!delim.empty())                  //If there is a connector, push each command onto the vector and
-    {                                       //truncate each the command up till the connector each time.
-        position = command.find(delim);
-        tok = command.substr(0, position);
+        while (!delim.empty())                  //If there is a connector, push each command onto the vector and
+        {                                       //truncate each the command up till the connector each time.
+            position = command.find(delim);
+            tok = command.substr(0, position);
 
-        delims.push_back(delim);
-        commands.push_back(tok);
+            delims.push_back(delim);
+            commands.push_back(tok);
 
-        command.erase(0, position + delim.length());
+            command.erase(0, position + delim.length());
 
-        delim = first_delim(command);
-    }
+            delim = first_delim(command);
+        }
 
-    commands.push_back(command);            //If there is a command not followed by a connector, dont forget
+        commands.push_back(command);            //If there is a command not followed by a connector, dont forget
     }                                       //to push it.
-    
+
 
 }
-            
-int execute(string command, vector<string> redirs)                 //Execute takes one command from the command vector and runs it.
+
+void sig_handler_c (int)
+{
+}
+
+void sig_handler_z(int)
+{
+   raise(SIGCHLD);
+}
+
+int execute(string command)                 //Execute takes one command from the command vector and runs it.
 {
     int status;                 //child process status
 
@@ -179,10 +123,10 @@ int execute(string command, vector<string> redirs)                 //Execute tak
     }
 
     char *iterate = char_string;    //Iterate runs through each char in a the string.
-                                    //It is used to identify how many words are in the
+    //It is used to identify how many words are in the
     bool this_a_word = false;       //string. The way this is done is with a "switch" called
-                                    //this_a_word which "flips" everytime a word is found.
-    int word_count = 0;             
+    //this_a_word which "flips" everytime a word is found.
+    int word_count = 0;            
 
 
 
@@ -208,7 +152,7 @@ int execute(string command, vector<string> redirs)                 //Execute tak
         return(0);
     }
 
-    char** argv = (char  **) 
+    char** argv = (char  **)
         malloc(sizeof(char*) * ++word_count);   //Once the word count is found, malloc() dynamically
     //allocates memory for the input array. This is required
     //since array size must be allocated at compile time.
@@ -219,7 +163,7 @@ int execute(string command, vector<string> redirs)                 //Execute tak
 
     int i = 0;
     while ( point != NULL)
-    {   
+    {  
         argv[i++] = point;
         point = strtok (NULL, " ");             //error check, add a NULL terminator.
     }
@@ -228,98 +172,101 @@ int execute(string command, vector<string> redirs)                 //Execute tak
 
     if (strcmp(argv[0], "exit") == 0 )              //If the user input 'exit' quit the program.
     {
+        free(argv);
         exit(0);
+    }
+
+    if(strcmp(argv[0], "cd") == 0)
+    {
+        struct stat sb;
+
+        if(stat(argv[1], &sb) != 0)
+        {
+            perror("stat");
+            return 1;
+        }
+
+        if(S_ISDIR(sb.st_mode))
+        {
+
+            if(chdir(argv[1]) != 0)
+            {
+                perror("chdir");
+            }
+        }
+        else
+        {
+            cout<<argv[1]<<" is not a valid directory."<<endl;
+            return 1;
+        }
+
+        return 0;
     }
 
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
-        bool std_in = false;
-        bool std_out = false;
-        bool append = false;
-    
-        if(!redirs.empty())
+        char* pPath;
+        pPath = getenv ("PATH");
+        if (pPath == NULL)
         {
-        for( vector<int>::size_type k=0; k != redirs.size(); k++)  //iterate though the command vector
-        {
-            string current = redirs.at(k);
-
-            if (    strcmp(current.substr(0,1).c_str(), "<" ) == 0 &&
-                    std_in == false)
-            {
-                string in = current.substr(2);
-                int fd = open(in.c_str(), O_RDWR);
-                if (fd == -1)
-                {
-                    perror("open1");
-                }
-                if(close(0) == -1)
-                {
-                    perror("close1");
-                }
-                if (dup(fd) == -1)
-                {
-                    perror("dup1");
-
-                }
-                std_in = true;
-            }
-
-            if (    (strcmp(current.substr(0,1).c_str(), ">" ) == 0 ||
-                        strcmp(current.substr(0,1).c_str(), ">>" ) == 0) &&
-                    std_out == false)
-            {
-
-                if( strcmp(current.substr(0,1).c_str(), ">>" ) == 0)
-                {
-                    append = true;
-                }
-
-                int fd2;
-
-                string out = current.substr(2);
-
-                if (append == true)
-                {
-                    fd2 = open(out.c_str(), O_APPEND | O_CREAT);
-                }
-
-                else
-                {
-                    fd2 = open(out.c_str(), O_CREAT);
-                    
-                }
-                if (fd2 == -1)
-                {
-                    perror("open2");
-                }
-                if(close(1) == -1)
-                {
-                    perror("close2");
-                }
-                if (dup(fd2) == -1)
-                {
-                    perror("dup2");
-                    
-                }
-                std_out = true;
-            }
+            perror("getenv");
         }
 
-            if (execvp ( argv[0], argv) != 0)       //execvp() runs the command with arguments.
+        // printf ("The current path is: %s\n",pPath);
+
+        vector <char* > path_list;
+        char* path_tok;
+
+        path_tok = strtok ( pPath, ":");
+
+        while ( path_tok != NULL)
+        {
+            path_list.push_back(path_tok);
+            path_tok = strtok (NULL, ":");
+        }
+
+        char* initial_command = argv[0];
+
+        for( vector<char*>::size_type i=0; i != path_list.size(); i++)
+        {
+            char appended_path[strlen(path_list.at(i)) + strlen(initial_command) + 2];
+
+            strncpy( appended_path, path_list.at(i), strlen(path_list.at(i)) +
+                    strlen(initial_command) + 2);
+            if( appended_path[strlen(appended_path)-1] != '/')
             {
-                perror("execvp failed");            //Error checking execvp()
+                strcat( appended_path, "/");
+            }
+            strncat( appended_path, initial_command, strlen(path_list.at(i)) +
+                    strlen(initial_command) + 2);
+
+            argv[0] = appended_path;
+
+            if (execv ( argv[0], argv) != 0 && i == path_list.size()-1)       //execv() runs the command with arguments.
+            {
+                perror("execv failed");            //Error checking execv()
+                free(argv);
                 exit(1);
             }
-
-            close(0);
-            close(1);
-
         }
     }
+
     else if (pid != 0)
     {
-        while (wait(&status) != pid)            //The parent process waits for child to die. The status 
+        if( signal(SIGINT, sig_handler_c) == SIG_ERR)
+        {
+            perror("signal c");
+        }
+
+        signal(SIGSTOP, sig_handler_z);
+
+      //  if( signal(SIGSTOP, sig_handler_z) == SIG_ERR)
+      //  {
+      //      perror("signal z");
+      //  }
+
+        while (wait(&status) != pid)            //The parent process waits for child to die. The status
         {                                       //of this process changes accordingly. If it throws out
             perror("wait failed");              //a non-0, the child process failed.
         }
@@ -334,19 +281,16 @@ int execute(string command, vector<string> redirs)                 //Execute tak
 
 int main()
 {
-
+    //signal(SIGINT, sig_handler_c);
+    
+    //signal(SIGTSTP,sig_handler_z);
+    
     string input;               //user input
     vector<string> delims;      //vector of connectors
     vector<string> commands;    //vector of commands
 
-    vector<string> pipes;
-    vector<string> pipe_commands;
-
-    vector<string> redirs;
-    vector<string> redir_commands;
-
     struct passwd *user = getpwuid(getuid());   //user info retrieval
-    if (user == NULL)       
+    if (user == NULL)      
     {
         perror("getlogin() error");             //error checking
     }
@@ -358,89 +302,26 @@ int main()
         parse(input, delims, commands);     //parse input
 
         for( vector<int>::size_type i=0; i != commands.size(); i++)  //iterate though the command vector
-        {   
-            pipe_parse(commands[i], pipes, pipe_commands);
+        {                                                          
+            int code = execute(commands[i]);    //execute each command stored in the vector.
 
-            for( vector<int>::size_type j=0; j != pipe_commands.size(); j++)  //iterate though the command vector
+            if (i < commands.size() - 1)
             {
-                char *point;
-
-                char *curr = strdup(pipe_commands[j].c_str()); //Convert string to char*
-                if (curr == NULL)
+                if(code != 0)   //if the code failed, dont run the next command if its &&'d
                 {
-                    perror("strdup");    //Error checking strdup
-                }
-
-                point = strtok (curr, " ");          //tokenize the command and split arguments from command.
-
-                while ( point != NULL)
-                {  
-                    redir_commands.push_back(point);
-                    point = strtok (NULL, " ");             //error check, add a NULL terminator.
-                }
-
-                for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
-                {
-                    if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
-                            strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
-                            strcmp(redir_commands.at(k).c_str(), ">>") == 0)
+                    if(delims[i].compare("&&") == 0)
                     {
-                        string appended_redir;
-                        appended_redir.append(redir_commands.at(k));
-                        appended_redir.append(" ");
-                        appended_redir.append(redir_commands.at(k+1));
-
-                        redirs.push_back(appended_redir);
+                        break;
                     }
                 }
-
-                for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
+                if(code == 0)   //if the code was good, dont run the next command if ||'d
                 {
-                    if(  strcmp(redir_commands.at(k).c_str(), "<") == 0 ||
-                            strcmp(redir_commands.at(k).c_str(), ">") == 0 ||
-                            strcmp(redir_commands.at(k).c_str(), ">>") == 0)
+                    if(delims[i].compare("||") == 0)
                     {
-                        redir_commands.erase(redir_commands.begin() + k, redir_commands.begin() + k + 2);
-                        k = 0;
+                        break;
                     }
                 }
-
-                string n_command;
-
-                for( vector<int>::size_type k=0; k != redir_commands.size(); k++)  //iterate though the command vector
-                {
-                    n_command.append(redir_commands.at(k));
-                    n_command.append(" ");
-
-                }
-
-                execute(n_command, redirs);
-
-                redir_commands.clear();
-                redirs.clear();
             }
-            
-            pipes.clear();
-            pipe_commands.clear();
-            //int code = execute(commands[i]);    //execute each command stored in the vector.
-            //
-            //if (i < commands.size() - 1)
-            //{
-            //    if(code != 0)   //if the code failed, dont run the next command if its &&'d
-            //    {
-            //        if(delims[i].compare("&&") == 0)
-            //        {
-            //             break;
-            //        }
-            //    }
-            //    if(code == 0)   //if the code was good, dont run the next command if ||'d
-            //    {
-            //        if(delims[i].compare("||") == 0)
-            //        {
-            //            break;
-            //        }
-            //    }
-            //}
         }
 
         commands.clear();    //clear vectors for next getline.

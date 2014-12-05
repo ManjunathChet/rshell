@@ -4,7 +4,7 @@ CC=g++
 #
 # 
 #
-CFLAGS= -W -Wall -Werror -ansi -pedantic -g
+CFLAGS= -W -Wall -Werror -g
 
 
 all: rshell ls cp 
