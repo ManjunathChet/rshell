@@ -1,3 +1,4 @@
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -102,18 +103,16 @@ void parse(     string& command,            //parse() uses first_delim() to brea
 
 }
 
-void sig_handler_c (int signum)
+void sig_handler_c (int)
 {
-    signum++;
  //   if (kill(0, signum) != 0)
  //  {
  //       perror("kill");
  //   }
 }
 
-void sig_handler_z(int signum)
+void sig_handler_z(int)
 {
-    signum++;
     raise(SIGSTOP);
 }
 
@@ -177,7 +176,35 @@ int execute(string command)                 //Execute takes one command from the
 
     if (strcmp(argv[0], "exit") == 0 )              //If the user input 'exit' quit the program.
     {
+        free(argv);
         exit(0);
+    }
+
+    if(strcmp(argv[0], "cd") == 0)
+    {
+        struct stat sb;
+
+        if(stat(argv[1], &sb) != 0)
+        {
+            perror("stat");
+            return 1;
+        }
+
+        if(S_ISDIR(sb.st_mode))
+        {
+
+            if(chdir(argv[1]) != 0)
+            {
+                perror("chdir");
+            }
+        }
+        else
+        {
+            cout<<argv[1]<<" is not a valid directory."<<endl;
+            return 1;
+        }
+
+        return 0;
     }
 
     int pid=fork();                             //fork() creates a child process for the commands run
@@ -190,7 +217,7 @@ int execute(string command)                 //Execute takes one command from the
             perror("getenv");
         }
 
-       // printf ("The current path is: %s\n",pPath);
+        // printf ("The current path is: %s\n",pPath);
 
         vector <char* > path_list;
         char* path_tok;
@@ -207,21 +234,23 @@ int execute(string command)                 //Execute takes one command from the
 
         for( vector<char*>::size_type i=0; i != path_list.size(); i++)
         {
-            char* appended_path = new char [strlen(path_list.at(i)) + 
-                strlen(initial_command) + 10];
+            char appended_path[strlen(path_list.at(i)) + strlen(initial_command) + 2];
 
-            strcpy( appended_path, path_list.at(i));
+            strncpy( appended_path, path_list.at(i), strlen(path_list.at(i)) + 
+                strlen(initial_command) + 2);
             if( appended_path[strlen(appended_path)-1] != '/')
             {
                 strcat( appended_path, "/");
             }
-            strcat( appended_path, initial_command);
+            strncat( appended_path, initial_command, strlen(path_list.at(i)) + 
+                strlen(initial_command) + 2);
 
             argv[0] = appended_path;
 
             if (execv ( argv[0], argv) != 0 && i == path_list.size()-1)       //execv() runs the command with arguments.
             {
                 perror("execv failed");            //Error checking execv()
+                free(argv);
                 exit(1);
             }
         }
@@ -230,7 +259,7 @@ int execute(string command)                 //Execute takes one command from the
     else if (pid != 0)
     {
         signal(SIGINT, sig_handler_c);
-        signal(SIGTSTP,sig_handler_z);
+        
         while (wait(&status) != pid)            //The parent process waits for child to die. The status 
         {                                       //of this process changes accordingly. If it throws out
             perror("wait failed");              //a non-0, the child process failed.
@@ -247,7 +276,7 @@ int execute(string command)                 //Execute takes one command from the
 int main()
 {
     //signal(SIGINT, sig_handler_c);
-
+signal(SIGTSTP,sig_handler_z);
     string input;               //user input
     vector<string> delims;      //vector of connectors
     vector<string> commands;    //vector of commands
