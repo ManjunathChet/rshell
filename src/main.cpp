@@ -243,12 +243,13 @@ int execute(string command)                 //Execute takes one command from the
 
             argv[0] = appended_path;
 
-            if (execv ( argv[0], argv) != 0 && i == path_list.size()-1)       //execv() runs the command with arguments.
+            if (execv( argv[0], argv ) != 0 && i == path_list.size()-1)       //execv() runs the command with arguments.
             {
                 perror("execv failed");            //Error checking execv()
                 free(argv);
                 exit(1);
             }
+
         }
     }
 
