@@ -98,6 +98,7 @@ file_a and fill it with `hello world` inside. Rshell does not create the file.
 a Makefile, Rshell will use the path `./`, but elements in the Makefile might be located elsewhere (i.e. `g++` would
 be in `/usr/bin/`.)
 
+* If the PATH file has a function that exists in two places, the version that occurs first will be run.
 
 INPUT REDIRECTION/PIPING:
 
