@@ -109,7 +109,7 @@ void sig_handler_c (int)
 
 void sig_handler_z(int)
 {
-   raise(SIGCHLD);
+   kill (0, SIGCONT);
 }
 
 int execute(string command)                 //Execute takes one command from the command vector and runs it.
@@ -206,6 +206,7 @@ int execute(string command)                 //Execute takes one command from the
     int pid=fork();                             //fork() creates a child process for the commands run
     if (pid==0)                                 //PID of 0 means its the child process.
     {
+       // signal(SIGSTOP, sig_handler_z);
         char* pPath;
         pPath = getenv ("PATH");
         if (pPath == NULL)
@@ -217,13 +218,13 @@ int execute(string command)                 //Execute takes one command from the
 
         vector <char* > path_list;
         char* path_tok;
-
-        path_tok = strtok ( pPath, ":");
+        char* saveptr;
+        path_tok = strtok_r( pPath, ":", &saveptr);
 
         while ( path_tok != NULL)
         {
             path_list.push_back(path_tok);
-            path_tok = strtok (NULL, ":");
+            path_tok = strtok_r(NULL, ":", &saveptr);
         }
 
         char* initial_command = argv[0];
@@ -260,12 +261,7 @@ int execute(string command)                 //Execute takes one command from the
             perror("signal c");
         }
 
-        signal(SIGSTOP, sig_handler_z);
-
-      //  if( signal(SIGSTOP, sig_handler_z) == SIG_ERR)
-      //  {
-      //      perror("signal z");
-      //  }
+        // signal(SIGSTOP, sig_handler_z);
 
         while (wait(&status) != pid)            //The parent process waits for child to die. The status
         {                                       //of this process changes accordingly. If it throws out
@@ -282,10 +278,6 @@ int execute(string command)                 //Execute takes one command from the
 
 int main()
 {
-    //signal(SIGINT, sig_handler_c);
-    
-    //signal(SIGTSTP,sig_handler_z);
-    
     string input;               //user input
     vector<string> delims;      //vector of connectors
     vector<string> commands;    //vector of commands

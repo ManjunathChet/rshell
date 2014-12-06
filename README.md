@@ -92,16 +92,16 @@ file_a and fill it with `hello world` inside. Rshell does not create the file.
 
 * Rshell does not have the up-arrow down-arrow macro for command retrieval.
 
+* Rshell can only run commands from a single path at once.
+
+* Due to the previous bug, Rshell has difficulty handling various bash scripts. For example, if the user passes in
+a Makefile, Rshell will use the path `./`, but elements in the Makefile might be located elsewhere (i.e. `g++` would
+be in `/usr/bin/`.)
+
+
 INPUT REDIRECTION/PIPING:
 
-* Rshell was designed to handle input redirection and piping, but only one part of redirection is funtional.
-
-* Only `<` is functional. The output redirection commands and piping do not work in this version.
-
-* For the input redirection to work, there must be a space between all arguments being passed in.
-For example: `cat<input.txt` will not work, it must be `cat < input.txt`
-
-* If there are multiple input redirectors specified, only the first one will be read in.
+* Input redirection and piping are not functional in this rshell.
 
 
 LS:
@@ -116,4 +116,8 @@ LS:
 
 * The filenames are displayed with their parent folders in `ls -l`.
 
+
+CD:
+
+* `cd` entered by itself will not return to the home directory.
 ---

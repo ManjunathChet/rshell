@@ -1,225 +1,59 @@
-Script started on Thu 20 Nov 2014 11:24:56 PM PST
+Script started on Fri 05 Dec 2014 06:24:14 PM PST
 ~
-cmanj001@hammer $ ls
-C:\nppdf32Log\debuglog.txt  [0m[01;34mdirname[0m/       [01;34mPublic[0m/
-cp.cpp                      [01;34mDocuments[0m/     [01;34mTemplates[0m/
-[01;34mcs012[0m/                      [01;34mDownloads[0m/     typescript
-[01;34mcs014[0m/                      [01;32mexercise4[0m*     [01;34mvegas[0m/
-[01;34mcs100[0m/                      exercise4.cpp  [01;34mVideos[0m/
-[01;34mcs61[0m/                       ls.cpp         [01;34mWINDOWS[0m/
-[01;34mcs61U[0m/                      [01;34mMusic[0m/
-[01;34mDesktop[0m/                    [01;34mPictures[0m/
-[m~
-cmanj001@hammer $ cd cs100/ [Krshell
+cmanj001@hammer $ cd rs[K[Kcs100/rshell
 ~/cs100/rshell
-cmanj001@hammer $ bin/re[K[K[K[K[K[Kmake
-([ ! -d bin ] && mkdir bin) || [ -d bin ]
-g++ -W -Wall -Werror -ansi -pedantic -g src/main.cpp -o bin/rshell
-([ ! -d bin ] && mkdir bin) || [ -d bin ]
-g++ -W -Wall -Werror -ansi -pedantic -g src/ls.cpp -o bin/ls
-([ ! -d bin ] && mkdir bin) || [ -d bin ]
-g++ -W -Wall -Werror -ansi -pedantic -g src/cp.cpp -o bin/cp
+cmanj001@hammer $ PATH=$PATH:~/opt/bin[K[K[K[K[K[K[Kcs100/rshellb[K/bin/ #adding custom m[Kpath with custon l[K[K[Km ls
 ~/cs100/rshell
 cmanj001@hammer $ bin/rshell
-cmanj001 $ cat < somefile
-a.out
-bin
-cat
-LICENSE
-Makefile
-README.md
-rshell.out
-somefile
-src
-tests
-t
-bin
-LICENSE
-Makefile
-README.md
-rshell.out
-somefile
-src
-tests
 cmanj001 $ ls
-cmanj001 $ exit
+a.out  cat		 execute_cmd.sh  LICENSE   README     remove.cpp  somefile  tests
+bin    checksyscalls.sh  fff		 Makefile  README.md  rshell.out  src
+cmanj001 $ cat
+something
+something
+^Ccmanj001 $ pwd
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ ^C^C^C^C^C^C^C^Cpwd
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ ^C^C^C^Cls
+a.out  cat		 execute_cmd.sh  LICENSE   README     remove.cpp  somefile  tests
+bin    checksyscalls.sh  fff		 Makefile  README.md  rshell.out  src
+cmanj001 $ cd   ..
+cmanj001 $ pwd
+/class/classes/cmanj001/cs100
+cmanj001 $ cd   rshell && pwd
+/class/classes/cmanj001/cs100/rshell
+cmanj001 $ cd READMEN .md
+README.md is not a valid directory.
+cmanj001 $ cd garbage
+stat: No such file or directory
+cmanj001 $ top
+[H[2J[mtop - 18:26:27 up 22 days, 23:46, 35 users,  load average: 1.38, 1.35, 1.29[m[m[K
+Tasks:[m[m[m 852 [m[mtotal,[m[m[m   1 [m[mrunning,[m[m[m 851 [m[msleeping,[m[m[m   0 [m[mstopped,[m[m[m   0 [m[mzombie[m[m[K
+Cpu(s):[m[m[m  0.0%[m[mus,[m[m[m  0.0%[m[msy,[m[m[m  0.0%[m[mni,[m[m[m 99.9%[m[mid,[m[m[m  0.0%[m[mwa,[m[m[m  0.0%[m[mhi,[m[m[m  0.0%[m[msi,[m[m[m  0.0%[m[mst[m[m[K
+Mem: [m[m[m 264524916k [m[mtotal,[m[m[m 14975140k [m[mused,[m[m[m 249549776k [m[mfree,[m[m[m   424340k [m[mbuffers[m[m[K
+Swap:[m[m[m 27585532k [m[mtotal,[m[m[m        0k [m[mused,[m[m[m 27585532k [m[mfree,[m[m[m  8091980k [m[mcached[m[m[K
+[6;1H
+[7m  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                                          [m[m[K
+[m[m46558 cmanj001  20   0 19816 1856  920 R  5.6  0.0   0:00.04 top                                                              [m[m
+[m    1 root      20   0 23596 1604 1268 S  0.0  0.0   0:06.92 init                                                             [m[m
+[m    2 root      20   0     0    0    0 S  0.0  0.0   0:00.19 kthreadd                                                         [m[m
+[m    3 root      RT   0     0    0    0 S  0.0  0.0   0:00.17 migration/0                                                      [m[m
+[m    4 root      20   0     0    0    0 S  0.0  0.0   0:01.21 ksoftirqd/0                                                      [m[m
+[m    5 root      RT   0     0    0    0 S  0.0  0.0   0:00.00 stopper/0                                                        [m[m
+[m    6 root      RT   0     0    0    0 S  0.0  0.0   0:01.51 watchdog/0                                                       [m[m
+[m    7 root      RT   0     0    0    0 S  0.0  0.0   0:00.76 migration/1                                                      [m[m[6;1H[K[16;1H
+cmanj001 $ ls
+a.out  cat		 execute_cmd.sh  LICENSE   README     remove.cpp  somefile  tests
+bin    checksyscalls.sh  fff		 Makefile  README.md  rshell.out  src
 cmanj001 $ exit
 ~/cs100/rshell
-cmanj001@hammer $ bin/rshell
-cmanj001 $ ls  cat < somefile | sort
-a.out
-bin
-cat
-LICENSE
-Makefile
-README.md
-rshell.out
-somefile
-src
-tests
-t
-bin
-LICENSE
-Makefile
-README.md
-rshell.out
-somefile
-src
-tests
-cmanj001 $ exit    cat < RE	ADME.md
-===
-
-#Rshell
-
-Root Location: https://github.com/ManjunathChet/rshell.git
-
-*Contributors:*
-
-*Chetas Manjunath*
-*Gillian Liu (for cp)*
-
-License: GNU GENERAL PUBLIC LICENSE
-*--Refer to LICENSE file--*
-
----
-
-**Description**
-
-Rshell is a program based off of the UNIX bash shell. The purpose of the
-program is to mimic the command line behavior of the bash shell. When run
-in a UNIX terminal, the program takes in common shell commands. These include
-`pwd` `ls` `echo` and most other commands. 
-
-The program does the following:
-
-* Print a command promt with userID
-* Read in commands that are entered on one line
-* Run commands when entered
-* Exit when the user types `exit`
-
-The ls program is meant to mimic the Linux ls command.
-
-The ls program does the following:
-
-* Outputs files in specified directory.
-* Takes in `-a` `-l` `-R` flags
-* Uses stat syscall to retrieve file information.
-
-The cp program is meant to mimic the Linux cp command.
-
-The cp program does the following:
-
-* Copies contents from the first file specified to the second.
-* Outputs errors based on files passed in and total arguments.
-
----
-
-**Instructions**
-
-The root folder for this program can be found at `https://github.com/ManjunathChet/rshell.git`.
-Once in the folder,
-
-* Run the command `make`.
-* Run `bin/rshell` to run Rshell, or `bin/ls` for ls.
----
-
-**Known Bugs**
-
-RSHELL: 
-
-* UNIX prioritizes `;` over connectors `&&` and `||`. In Rshell, all three connectors are
-treated the same. ` ls -l || pwd; ls -a` will perform `ls -l` and `pwd` when run in 
-terminal. The same command only runs `ls -l` in Rshell.
-
-* When `&` is passed in as an argument into UNIX, it runs the commands, but flips the output.
-For example, `pwd & echo hello` returns
-```
-[1] 43775 #pid
-hello
-#files listed
-[1]+ Done
-```
-But when Rshell passes in `&`, the commands "cannot access &".
-
-* When `echo` has arguments in quotations, UNIX strips the whitespace and outputs strings only.
-Rshell outputs all whitespace and the quotations as well.
-
-* UNIX treats everything in quotations as a single argument. Rshell splits up arguments based 
-on whitespace.
-
-* Rshell cannot run `cd`
-
-* Rshell will not recognize `&&` and `||` as invalid commands if they are the first inputs.
-`|| ls -a || ls -l` yields a bash syntax error in UNIX. In Rshell, this command is valid and
-outputs nothing. Similarly, `&& ls -a && ls -l` yields a bash syntax error in UNIX. Rshell successfully
-runs all commands.
-
-* Rshell returns nothing if a single `;` is entered, but UNIX returns a bash syntax error.
-
-* Rshell will not fill a file. For example, when run in UNIX `echo hello world > file_a` will create 
-file_a and fill it with `hello world` inside. Rshell does not create the file.
-
-* Rshell does not have the up-arrow down-arrow macro for command retrieval.
-
-LS:
-
-* `ls -l` does not support the OSX filetype recognition.
-
-* When ls -l is run on multiple directories, there are spaces missing between the sets.
-
-* Column sizes of output are all uniform. The width is based on the largest filename.
-
-* When `-a` and `-l` are run together, the total # is missing at the top.
-
-* The filenames are displayed with their parent folders in `ls -l`.
-
----
-cmanj001 $ ^C
-~/cs100/rshell
-cmanj001@hammer $ bin/re[Kshell
-cmanj001 $ tr A-A Z   a-z A-Z < somefile
-A.OUT
-BIN
-CAT
-LICENSE
-MAKEFILE
-README.MD
-RSHELL.OUT
-SOMEFILE
-SRC
-TESTS
-T
-BIN
-LICENSE
-MAKEFILE
-README.MD
-RSHELL.OUT
-SOMEFILE
-SRC
-TESTS
-cmanj001 $ soty  rt < somefile
-a.out
-bin
-bin
-cat
-LICENSE
-LICENSE
-Makefile
-Makefile
-README.md
-README.md
-rshell.out
-rshell.out
-somefile
-somefile
-src
-src
-t
-tests
-tests
-cmanj001 $ cd  ls  cat < somei file > somene                       exit
+cmanj001@hammer $ exit[K[K[K[Kbin/rshell
+cmanj001 $ bin/rshell
+cmanj001 $ ls  exit
+cmanj001 $ exit
 ~/cs100/rshell
 cmanj001@hammer $ exit
 exit
 
-Script done on Thu 20 Nov 2014 11:29:49 PM PST
+Script done on Fri 05 Dec 2014 06:26:58 PM PST
