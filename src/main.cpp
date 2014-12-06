@@ -14,8 +14,9 @@
 
 using namespace std;
 
-string first_delim(string& command) //first_delim() finds the first delimiter in a string.
+int global_pid;
 
+string first_delim(string& command) //first_delim() finds the first delimiter in a string.
 {
         map <int, string> delim_locations;  //The function pushes all connecters into a map
             //Since a map is ordered, it uses the first connecter
@@ -109,26 +110,28 @@ void sig_handler_c (int)
 
 void sig_handler_z(int)
 {
-   kill (0, SIGCONT);
+    kill (0, SIGCONT);
 }
 
-int execute(string command)                 //Execute takes one command from the command vector and runs it.
+//Execute takes one command from the command vector and runs it.
+int execute(string command)                 
 {
-    int status;                 //child process status
+    int status;                
 
-    char *char_string = strdup(command.c_str()); //Convert string to char*
+    char *char_string = strdup(command.c_str()); 
     if (char_string == NULL)
     {
-        perror("strdup error: insufficient memory");    //Error checking strdup
+        perror("strdup error: insufficient memory");   
     }
 
-    char *iterate = char_string;    //Iterate runs through each char in a the string.
-    //It is used to identify how many words are in the
-    bool this_a_word = false;       //string. The way this is done is with a "switch" called
+    char *iterate = char_string;    
+    bool this_a_word = false;   
+    //Iterate runs through each char in a the string.
+    //It is used to identify how many words are in the       
+    //string. The way this is done is with a "switch" called
     //this_a_word which "flips" everytime a word is found.
+    
     int word_count = 0;            
-
-
 
     while (*iterate != '\0')
     {
@@ -136,7 +139,7 @@ int execute(string command)                 //Execute takes one command from the
         {
             this_a_word = false;
         }
-        else                        //Flip logic. Everytime the bool flips a word is found.
+        else          
         {
             if( this_a_word == false)
             {
@@ -147,30 +150,33 @@ int execute(string command)                 //Execute takes one command from the
 
         iterate++;
     }
-    if (word_count == 0)        //If there are no words, then return a success tag and do nothing.
+    
+    //If there are no words, then return a success tag and do nothing.
+    if (word_count == 0)            
     {
         return(0);
     }
 
     char** argv = (char  **)
-        malloc(sizeof(char*) * ++word_count);   //Once the word count is found, malloc() dynamically
+        malloc(sizeof(char*) * ++word_count);   
+    //Once the word count is found, malloc() dynamically
     //allocates memory for the input array. This is required
     //since array size must be allocated at compile time.
+    
     char *point;
 
-    point = strtok (char_string, " ");          //tokenize the command and split arguments from command.
-
+    point = strtok (char_string, " ");
 
     int i = 0;
     while ( point != NULL)
     {  
         argv[i++] = point;
-        point = strtok (NULL, " ");             //error check, add a NULL terminator.
+        point = strtok (NULL, " ");     
     }
 
     argv[i] = NULL;
 
-    if (strcmp(argv[0], "exit") == 0 )              //If the user input 'exit' quit the program.
+    if (strcmp(argv[0], "exit") == 0 )   
     {
         free(argv);
         exit(0);
@@ -203,18 +209,17 @@ int execute(string command)                 //Execute takes one command from the
         return 0;
     }
 
-    int pid=fork();                             //fork() creates a child process for the commands run
-    if (pid==0)                                 //PID of 0 means its the child process.
+    int pid=fork();
+
+    //child
+    if (pid==0)           
     {
-       // signal(SIGSTOP, sig_handler_z);
         char* pPath;
         pPath = getenv ("PATH");
         if (pPath == NULL)
         {
             perror("getenv");
         }
-
-        // printf ("The current path is: %s\n",pPath);
 
         vector <char* > path_list;
         char* path_tok;
@@ -231,37 +236,43 @@ int execute(string command)                 //Execute takes one command from the
 
         for( vector<char*>::size_type i=0; i != path_list.size(); i++)
         {
-            char appended_path[strlen(path_list.at(i)) + strlen(initial_command) + 2];
+            char appended_path[ strlen(path_list.at(i)) + 
+                                strlen(initial_command) + 2];
 
-            strncpy( appended_path, path_list.at(i), strlen(path_list.at(i)) +
-                    strlen(initial_command) + 2);
+            strncpy(    appended_path, 
+                        path_list.at(i), 
+                        strlen(path_list.at(i)) +
+                        strlen(initial_command) + 2);
+
             if( appended_path[strlen(appended_path)-1] != '/')
             {
                 strcat( appended_path, "/");
             }
-            strncat( appended_path, initial_command, strlen(path_list.at(i)) +
-                    strlen(initial_command) + 2);
+
+            strncat(    appended_path, 
+                        initial_command, 
+                        strlen(path_list.at(i)) +
+                        strlen(initial_command) + 2);
 
             argv[0] = appended_path;
 
             if (execv( argv[0], argv ) != 0 && i == path_list.size()-1)       //execv() runs the command with arguments.
             {
-                perror("execv failed");            //Error checking execv()
+                perror("execv failed");   
                 free(argv);
                 exit(1);
             }
 
         }
     }
-
+    
+    //parent
     else if (pid != 0)
     {
         if( signal(SIGINT, sig_handler_c) == SIG_ERR)
         {
             perror("signal c");
         }
-
-        // signal(SIGSTOP, sig_handler_z);
 
         while (wait(&status) != pid)            //The parent process waits for child to die. The status
         {                                       //of this process changes accordingly. If it throws out
@@ -278,14 +289,21 @@ int execute(string command)                 //Execute takes one command from the
 
 int main()
 {
+    if (SIG_ERR == signal(SIGTSTP, sig_handler_z))
+    {
+        perror("^z");
+    }
+
     string input;               //user input
     vector<string> delims;      //vector of connectors
     vector<string> commands;    //vector of commands
 
-    struct passwd *user = getpwuid(getuid());   //user info retrieval
+    struct passwd *user = getpwuid(getuid());   
+    //user info retrieval
+    
     if (user == NULL)      
     {
-        perror("getlogin() error");             //error checking
+        perror("getlogin() error");      
     }
 
     while(true)
